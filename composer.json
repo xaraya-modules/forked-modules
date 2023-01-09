@@ -1,0 +1,12 @@
+{
+    "name": "xaraya/changelog",
+    "type": "xaraya-module",
+    "description": "Keep track of changes to module items",
+    "homepage": "https://github.com/xaraya-modules/changelog",
+    "license": "GPL-2.0-or-later",
+    "require": {},
+    "autoload": {
+        "classmap": ["./"],
+        "exclude-from-classmap": ["/vendor/"]
+    }
+}

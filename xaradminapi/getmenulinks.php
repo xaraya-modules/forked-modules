@@ -19,26 +19,31 @@
  */
 function changelog_adminapi_getmenulinks()
 {
-    $menulinks = array();
+    $menulinks = [];
     // Security Check
     if (xarSecurityCheck('AdminChangeLog')) {
-        $menulinks[] = Array('url'   => xarModURL('changelog',
-                                                  'admin',
-                                                  'view'),
+        $menulinks[] = ['url'   => xarModURL(
+            'changelog',
+            'admin',
+            'view'
+        ),
                               'title' => xarML('View changelog entries per module'),
-                              'label' => xarML('View Changes'));
-        $menulinks[] = Array('url'   => xarModURL('changelog',
-                                                  'admin',
-                                                  'hooks'),
+                              'label' => xarML('View Changes')];
+        $menulinks[] = ['url'   => xarModURL(
+            'changelog',
+            'admin',
+            'hooks'
+        ),
                               'title' => xarML('Configure changelog hooks for other modules'),
-                              'label' => xarML('Enable Hooks'));
-        $menulinks[] = Array('url'   => xarModURL('changelog',
-                                                  'admin',
-                                                  'modifyconfig'),
+                              'label' => xarML('Enable Hooks')];
+        $menulinks[] = ['url'   => xarModURL(
+            'changelog',
+            'admin',
+            'modifyconfig'
+        ),
                               'title' => xarML('Modify the changelog configuration'),
-                              'label' => xarML('Modify Config'));
+                              'label' => xarML('Modify Config')];
     }
 
     return $menulinks;
 }
-?>

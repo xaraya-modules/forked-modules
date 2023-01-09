@@ -21,11 +21,11 @@
 function changelog_admin_hooks()
 {
     /* Security Check */
-    if(!xarSecurityCheck('AdminChangelog',0)) return;
+    if (!xarSecurityCheck('AdminChangelog', 0)) {
+        return;
+    }
 
-    $data = array();
+    $data = [];
 
     return $data;
 }
-
-?>

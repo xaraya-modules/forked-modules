@@ -27,20 +27,36 @@ function changelog_adminapi_getchanges($args)
     extract($args);
 
     if (!isset($modid) || !is_numeric($modid)) {
-        $msg = xarML('Invalid #(1) for #(2) function #(3)() in module #(4)',
-                    'module id', 'admin', 'getchanges', 'changelog');
-        xarErrorSet(XAR_USER_EXCEPTION, 'BAD_PARAM',
-                       new SystemException($msg));
+        $msg = xarML(
+            'Invalid #(1) for #(2) function #(3)() in module #(4)',
+            'module id',
+            'admin',
+            'getchanges',
+            'changelog'
+        );
+        xarErrorSet(
+            XAR_USER_EXCEPTION,
+            'BAD_PARAM',
+            new SystemException($msg)
+        );
         return;
     }
     if (!isset($itemtype) || !is_numeric($itemtype)) {
         $itemtype = 0;
     }
     if (!isset($itemid) || !is_numeric($itemid)) {
-        $msg = xarML('Invalid #(1) for #(2) function #(3)() in module #(4)',
-                    'item id', 'admin', 'getchanges', 'changelog');
-        xarErrorSet(XAR_USER_EXCEPTION, 'BAD_PARAM',
-                       new SystemException($msg));
+        $msg = xarML(
+            'Invalid #(1) for #(2) function #(3)() in module #(4)',
+            'item id',
+            'admin',
+            'getchanges',
+            'changelog'
+        );
+        xarErrorSet(
+            XAR_USER_EXCEPTION,
+            'BAD_PARAM',
+            new SystemException($msg)
+        );
         return;
     }
 
@@ -65,7 +81,7 @@ function changelog_adminapi_getchanges($args)
                  AND $changelogtable.xar_itemid = ?
             ORDER BY $changelogtable.xar_logid DESC";
 
-    $bindvars = array((int) $modid, (int) $itemtype, (int) $itemid);
+    $bindvars = [(int) $modid, (int) $itemtype, (int) $itemid];
 
     if (isset($numitems) && is_numeric($numitems)) {
         if (empty($startnum)) {
@@ -75,18 +91,20 @@ function changelog_adminapi_getchanges($args)
     } else {
         $result =& $dbconn->Execute($query, $bindvars);
     }
-    if (!$result) return;
+    if (!$result) {
+        return;
+    }
 
-    $changes = array();
+    $changes = [];
     while (!$result->EOF) {
-        $change = array();
-        list($change['logid'],
-             $change['editor'],
-             $change['hostname'],
-             $change['date'],
-             $change['status'],
-             $change['remark'],
-             $change['editorname']) = $result->fields;
+        $change = [];
+        [$change['logid'],
+            $change['editor'],
+            $change['hostname'],
+            $change['date'],
+            $change['status'],
+            $change['remark'],
+            $change['editorname']] = $result->fields;
         $changes[$change['logid']] = $change;
         $result->MoveNext();
     }
@@ -94,6 +112,3 @@ function changelog_adminapi_getchanges($args)
 
     return $changes;
 }
-
-
-?>

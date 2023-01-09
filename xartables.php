@@ -23,7 +23,7 @@
 function changelog_xartables()
 {
     // Initialise table array
-    $xarTables = array();
+    $xarTables = [];
     // Get the name for the changelog item table.  This is not necessary
     // but helps in the following statements and keeps them readable
     $changelogTable = xarDB::getPrefix() . '_changelog';
@@ -32,5 +32,3 @@ function changelog_xartables()
     // Return the table information
     return $xarTables;
 }
-
-?>

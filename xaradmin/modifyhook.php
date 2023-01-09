@@ -24,18 +24,34 @@ function changelog_admin_modifyhook($args)
     extract($args);
 
     if (!isset($extrainfo)) {
-        $msg = xarML('Invalid #(1) for #(2) function #(3)() in module #(4)',
-                    'extrainfo', 'admin', 'modifyhook', 'changelog');
-        xarErrorSet(XAR_USER_EXCEPTION, 'BAD_PARAM',
-                       new SystemException($msg));
+        $msg = xarML(
+            'Invalid #(1) for #(2) function #(3)() in module #(4)',
+            'extrainfo',
+            'admin',
+            'modifyhook',
+            'changelog'
+        );
+        xarErrorSet(
+            XAR_USER_EXCEPTION,
+            'BAD_PARAM',
+            new SystemException($msg)
+        );
         return $msg;
     }
 
     if (!isset($objectid) || !is_numeric($objectid)) {
-        $msg = xarML('Invalid #(1) for #(2) function #(3)() in module #(4)',
-                    'object ID', 'admin', 'modifyhook', 'changelog');
-        xarErrorSet(XAR_USER_EXCEPTION, 'BAD_PARAM',
-                       new SystemException($msg));
+        $msg = xarML(
+            'Invalid #(1) for #(2) function #(3)() in module #(4)',
+            'object ID',
+            'admin',
+            'modifyhook',
+            'changelog'
+        );
+        xarErrorSet(
+            XAR_USER_EXCEPTION,
+            'BAD_PARAM',
+            new SystemException($msg)
+        );
         return $msg;
     }
 
@@ -49,10 +65,18 @@ function changelog_admin_modifyhook($args)
 
     $modid = xarMod::getRegId($modname);
     if (empty($modid)) {
-        $msg = xarML('Invalid #(1) for #(2) function #(3)() in module #(4)',
-                    'module name', 'admin', 'modifyhook', 'changelog');
-        xarErrorSet(XAR_USER_EXCEPTION, 'BAD_PARAM',
-                       new SystemException($msg));
+        $msg = xarML(
+            'Invalid #(1) for #(2) function #(3)() in module #(4)',
+            'module name',
+            'admin',
+            'modifyhook',
+            'changelog'
+        );
+        xarErrorSet(
+            XAR_USER_EXCEPTION,
+            'BAD_PARAM',
+            new SystemException($msg)
+        );
         return $msg;
     }
 
@@ -71,24 +95,30 @@ function changelog_admin_modifyhook($args)
     if (!empty($extrainfo['changelog_remark'])) {
         $remark = $extrainfo['changelog_remark'];
     } else {
-        xarVarFetch('changelog_remark', 'str:1:', $remark, NULL, XARVAR_NOT_REQUIRED);
+        xarVarFetch('changelog_remark', 'str:1:', $remark, null, XARVAR_NOT_REQUIRED);
         if (empty($remark)) {
             $remark = '';
         }
     }
 
-    if (xarSecurityCheck('ReadChangeLog',0,'Item',"$modid:$itemtype:$itemid")) {
-        $link = xarModURL('changelog','admin','showlog',
-                          array('modid' => $modid,
-                                'itemtype' => $itemtype,
-                                'itemid' => $itemid));
+    if (xarSecurityCheck('ReadChangeLog', 0, 'Item', "$modid:$itemtype:$itemid")) {
+        $link = xarModURL(
+            'changelog',
+            'admin',
+            'showlog',
+            ['modid' => $modid,
+                  'itemtype' => $itemtype,
+                  'itemid' => $itemid]
+        );
     } else {
         $link = '';
     }
 
-    return xarTplModule('changelog','admin','modifyhook',
-                        array('remark' => $remark,
-                              'link' => $link));
+    return xarTplModule(
+        'changelog',
+        'admin',
+        'modifyhook',
+        ['remark' => $remark,
+              'link' => $link]
+    );
 }
-
-?>

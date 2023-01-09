@@ -24,18 +24,34 @@ function changelog_user_displayhook($args)
     extract($args);
 
     if (!isset($extrainfo)) {
-        $msg = xarML('Invalid #(1) for #(2) function #(3)() in module #(4)',
-                    'extrainfo', 'user', 'displayhook', 'changelog');
-        xarErrorSet(XAR_USER_EXCEPTION, 'BAD_PARAM',
-                       new SystemException($msg));
+        $msg = xarML(
+            'Invalid #(1) for #(2) function #(3)() in module #(4)',
+            'extrainfo',
+            'user',
+            'displayhook',
+            'changelog'
+        );
+        xarErrorSet(
+            XAR_USER_EXCEPTION,
+            'BAD_PARAM',
+            new SystemException($msg)
+        );
         return $msg;
     }
 
     if (!isset($objectid) || !is_numeric($objectid)) {
-        $msg = xarML('Invalid #(1) for #(2) function #(3)() in module #(4)',
-                    'object ID', 'user', 'displayhook', 'changelog');
-        xarErrorSet(XAR_USER_EXCEPTION, 'BAD_PARAM',
-                       new SystemException($msg));
+        $msg = xarML(
+            'Invalid #(1) for #(2) function #(3)() in module #(4)',
+            'object ID',
+            'user',
+            'displayhook',
+            'changelog'
+        );
+        xarErrorSet(
+            XAR_USER_EXCEPTION,
+            'BAD_PARAM',
+            new SystemException($msg)
+        );
         return $msg;
     }
 
@@ -49,10 +65,18 @@ function changelog_user_displayhook($args)
 
     $modid = xarMod::getRegId($modname);
     if (empty($modid)) {
-        $msg = xarML('Invalid #(1) for #(2) function #(3)() in module #(4)',
-                    'module name ' . $modname, 'user', 'displayhook', 'changelog');
-        xarErrorSet(XAR_USER_EXCEPTION, 'BAD_PARAM',
-                       new SystemException($msg));
+        $msg = xarML(
+            'Invalid #(1) for #(2) function #(3)() in module #(4)',
+            'module name ' . $modname,
+            'user',
+            'displayhook',
+            'changelog'
+        );
+        xarErrorSet(
+            XAR_USER_EXCEPTION,
+            'BAD_PARAM',
+            new SystemException($msg)
+        );
         return $msg;
     }
 
@@ -68,39 +92,54 @@ function changelog_user_displayhook($args)
         $itemid = $objectid;
     }
 
-    $changes = xarMod::apiFunc('changelog','admin','getchanges',
-                             array('modid' => $modid,
-                                   'itemtype' => $itemtype,
-                                   'itemid' => $itemid,
-                                   'numitems' => 1));
+    $changes = xarMod::apiFunc(
+        'changelog',
+        'admin',
+        'getchanges',
+        ['modid' => $modid,
+              'itemtype' => $itemtype,
+              'itemid' => $itemid,
+              'numitems' => 1]
+    );
     // return empty string here
-    if (empty($changes) || !is_array($changes) || count($changes) == 0) return '';
+    if (empty($changes) || !is_array($changes) || count($changes) == 0) {
+        return '';
+    }
 
     $data = array_pop($changes);
 
-    if (xarSecurityCheck('AdminChangeLog',0)) {
+    if (xarSecurityCheck('AdminChangeLog', 0)) {
         $data['showhost'] = 1;
     } else {
         $data['showhost'] = 0;
     }
 
-    $data['profile'] = xarModURL('roles','user','display',
-                                 array('id' => $data['editor']));
+    $data['profile'] = xarModURL(
+        'roles',
+        'user',
+        'display',
+        ['id' => $data['editor']]
+    );
     if (!$data['showhost']) {
         $data['hostname'] = '';
     }
     if (!empty($data['remark'])) {
         $data['remark'] = xarVarPrepForDisplay($data['remark']);
     }
-    $data['link'] = xarModURL('changelog','admin','showlog',
-                              array('modid' => $modid,
-                                    'itemtype' => $itemtype,
-                                    'itemid' => $itemid));
+    $data['link'] = xarModURL(
+        'changelog',
+        'admin',
+        'showlog',
+        ['modid' => $modid,
+              'itemtype' => $itemtype,
+              'itemid' => $itemid]
+    );
 
-// TODO: use custom template per module + itemtype ?
-     return xarTplModule('changelog','user','displayhook',
-                         $data);
-
+    // TODO: use custom template per module + itemtype ?
+    return xarTplModule(
+        'changelog',
+        'user',
+        'displayhook',
+        $data
+    );
 }
-
-?>

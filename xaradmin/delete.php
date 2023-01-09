@@ -17,17 +17,29 @@
 function changelog_admin_delete()
 {
     // Security Check
-    if(!xarSecurityCheck('AdminChangeLog')) return;
+    if (!xarSecurityCheck('AdminChangeLog')) {
+        return;
+    }
 
-    if(!xarVarFetch('modid',    'isset', $modid,     NULL, XARVAR_DONT_SET)) {return;}
-    if(!xarVarFetch('itemtype', 'isset', $itemtype,  NULL, XARVAR_DONT_SET)) {return;}
-    if(!xarVarFetch('itemid',   'isset', $itemid,    NULL, XARVAR_DONT_SET)) {return;}
-    if(!xarVarFetch('confirm', 'str:1:', $confirm, '', XARVAR_NOT_REQUIRED)) return;
-    if(!xarVarFetch('editor',   'isset', $editor,    NULL, XARVAR_DONT_SET)) {return;}
+    if (!xarVarFetch('modid', 'isset', $modid, null, XARVAR_DONT_SET)) {
+        return;
+    }
+    if (!xarVarFetch('itemtype', 'isset', $itemtype, null, XARVAR_DONT_SET)) {
+        return;
+    }
+    if (!xarVarFetch('itemid', 'isset', $itemid, null, XARVAR_DONT_SET)) {
+        return;
+    }
+    if (!xarVarFetch('confirm', 'str:1:', $confirm, '', XARVAR_NOT_REQUIRED)) {
+        return;
+    }
+    if (!xarVarFetch('editor', 'isset', $editor, null, XARVAR_DONT_SET)) {
+        return;
+    }
 
     // Check for confirmation.
     if (empty($confirm)) {
-        $data = array();
+        $data = [];
         $data['modid'] = $modid;
         $data['itemtype'] = $itemtype;
         $data['itemid'] = $itemid;
@@ -40,9 +52,14 @@ function changelog_admin_delete()
                 $data['modname'] = ucwords($modinfo['displayname']);
             } else {
                 // Get the list of all item types for this module (if any)
-                $mytypes = xarMod::apiFunc($modinfo['name'],'user','getitemtypes',
-                                         // don't throw an exception if this function doesn't exist
-                                         array(), 0);
+                $mytypes = xarMod::apiFunc(
+                    $modinfo['name'],
+                    'user',
+                    'getitemtypes',
+                    // don't throw an exception if this function doesn't exist
+                    [],
+                    0
+                );
                 if (isset($mytypes) && !empty($mytypes[$itemtype])) {
                     $data['modname'] = ucwords($modinfo['displayname']) . ' ' . $itemtype . ' - ' . $mytypes[$itemtype]['label'];
                 } else {
@@ -57,21 +74,25 @@ function changelog_admin_delete()
         return $data;
     }
 
-    if (!xarSecConfirmAuthKey()) return;
+    if (!xarSecConfirmAuthKey()) {
+        return;
+    }
 
-// comment out the following line if you want this
+    // comment out the following line if you want this
     return xarML('This feature is currently disabled for security reasons');
 
-    if (!xarMod::apiFunc('changelog','admin','delete',
-                       array('modid' => $modid,
-                             'itemtype' => $itemtype,
-                             'itemid' => $itemid,
-                             'editor' => $editor,
-                             'confirm' => $confirm))) {
+    if (!xarMod::apiFunc(
+        'changelog',
+        'admin',
+        'delete',
+        ['modid' => $modid,
+              'itemtype' => $itemtype,
+              'itemid' => $itemid,
+              'editor' => $editor,
+              'confirm' => $confirm]
+    )) {
         return;
     }
     xarResponse::Redirect(xarModURL('changelog', 'admin', 'view'));
     return true;
 }
-
-?>

@@ -26,27 +26,51 @@ function changelog_adminapi_getversion($args)
     extract($args);
 
     if (!isset($modid) || !is_numeric($modid)) {
-        $msg = xarML('Invalid #(1) for #(2) function #(3)() in module #(4)',
-                    'module id', 'admin', 'getversion', 'changelog');
-        xarErrorSet(XAR_USER_EXCEPTION, 'BAD_PARAM',
-                       new SystemException($msg));
+        $msg = xarML(
+            'Invalid #(1) for #(2) function #(3)() in module #(4)',
+            'module id',
+            'admin',
+            'getversion',
+            'changelog'
+        );
+        xarErrorSet(
+            XAR_USER_EXCEPTION,
+            'BAD_PARAM',
+            new SystemException($msg)
+        );
         return;
     }
     if (!isset($itemtype) || !is_numeric($itemtype)) {
         $itemtype = 0;
     }
     if (!isset($itemid) || !is_numeric($itemid)) {
-        $msg = xarML('Invalid #(1) for #(2) function #(3)() in module #(4)',
-                    'item id', 'admin', 'getversion', 'changelog');
-        xarErrorSet(XAR_USER_EXCEPTION, 'BAD_PARAM',
-                       new SystemException($msg));
+        $msg = xarML(
+            'Invalid #(1) for #(2) function #(3)() in module #(4)',
+            'item id',
+            'admin',
+            'getversion',
+            'changelog'
+        );
+        xarErrorSet(
+            XAR_USER_EXCEPTION,
+            'BAD_PARAM',
+            new SystemException($msg)
+        );
         return;
     }
     if (!isset($logid) || !is_numeric($logid)) {
-        $msg = xarML('Invalid #(1) for #(2) function #(3)() in module #(4)',
-                    'log id', 'admin', 'getversion', 'changelog');
-        xarErrorSet(XAR_USER_EXCEPTION, 'BAD_PARAM',
-                       new SystemException($msg));
+        $msg = xarML(
+            'Invalid #(1) for #(2) function #(3)() in module #(4)',
+            'log id',
+            'admin',
+            'getversion',
+            'changelog'
+        );
+        xarErrorSet(
+            XAR_USER_EXCEPTION,
+            'BAD_PARAM',
+            new SystemException($msg)
+        );
         return;
     }
 
@@ -72,25 +96,26 @@ function changelog_adminapi_getversion($args)
                  AND $changelogtable.xar_itemid = ?
                  AND $changelogtable.xar_logid = ?";
 
-    $bindvars = array((int) $modid, (int) $itemtype, (int) $itemid, (int) $logid);
+    $bindvars = [(int) $modid, (int) $itemtype, (int) $itemid, (int) $logid];
 
     $result =& $dbconn->Execute($query, $bindvars);
-    if (!$result) return;
+    if (!$result) {
+        return;
+    }
 
-    $version = array();
+    $version = [];
     if ($result->EOF) {
         return $version;
     }
-    list($version['logid'],
-         $version['editor'],
-         $version['hostname'],
-         $version['date'],
-         $version['status'],
-         $version['remark'],
-         $version['content'],
-         $version['editorname']) = $result->fields;
+    [$version['logid'],
+        $version['editor'],
+        $version['hostname'],
+        $version['date'],
+        $version['status'],
+        $version['remark'],
+        $version['content'],
+        $version['editorname']] = $result->fields;
     $result->Close();
 
     return $version;
 }
-?>

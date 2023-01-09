@@ -31,20 +31,36 @@ function changelog_userapi_getitems($args)
 
     // Argument check
     if (!isset($modname) && !isset($modid)) {
-        $msg = xarML('Invalid #(1) for #(2) function #(3)() in module #(4)',
-                    'module', 'user', 'getitems', 'changelog');
-        xarErrorSet(XAR_USER_EXCEPTION, 'BAD_PARAM',
-                       new SystemException($msg));
+        $msg = xarML(
+            'Invalid #(1) for #(2) function #(3)() in module #(4)',
+            'module',
+            'user',
+            'getitems',
+            'changelog'
+        );
+        xarErrorSet(
+            XAR_USER_EXCEPTION,
+            'BAD_PARAM',
+            new SystemException($msg)
+        );
         return;
     }
     if (!empty($modname)) {
         $modid = xarMod::getRegId($modname);
     }
     if (empty($modid)) {
-        $msg = xarML('Invalid #(1) for #(2) function #(3)() in module #(4)',
-                    'module', 'user', 'getitems', 'changelog');
-        xarErrorSet(XAR_USER_EXCEPTION, 'BAD_PARAM',
-                       new SystemException($msg));
+        $msg = xarML(
+            'Invalid #(1) for #(2) function #(3)() in module #(4)',
+            'module',
+            'user',
+            'getitems',
+            'changelog'
+        );
+        xarErrorSet(
+            XAR_USER_EXCEPTION,
+            'BAD_PARAM',
+            new SystemException($msg)
+        );
         return;
     } elseif (empty($modname)) {
         $modinfo = xarModGetInfo($modid);
@@ -61,11 +77,13 @@ function changelog_userapi_getitems($args)
     }
 
     if (!isset($itemids)) {
-        $itemids = array();
+        $itemids = [];
     }
 
-// Security Check
-   if (!xarSecurityCheck('ReadChangeLog',1,"$modid:$itemtype:All")) return;
+    // Security Check
+    if (!xarSecurityCheck('ReadChangeLog', 1, "$modid:$itemtype:All")) {
+        return;
+    }
 
     // Database information
     $dbconn = xarDB::getConn();
@@ -78,14 +96,14 @@ function changelog_userapi_getitems($args)
                 FROM $changelogtable
                WHERE xar_moduleid = ?
                  AND xar_itemtype = ?";
-    $bindvars = array((int) $modid, (int) $itemtype);
+    $bindvars = [(int) $modid, (int) $itemtype];
 
     if (!empty($editor) && is_numeric($editor)) {
         $query .= " AND xar_editor = ? ";
         $bindvars[] = (int) $editor;
     }
     if (count($itemids) > 0) {
-        $allids = join(', ',$itemids);
+        $allids = join(', ', $itemids);
         $query .= " AND xar_itemid IN ( ? ) ";
         $bindvars[] = (string) $allids;
     }
@@ -101,11 +119,13 @@ function changelog_userapi_getitems($args)
     } else {
         $result =& $dbconn->Execute($query, $bindvars);
     }
-    if (!$result) return;
+    if (!$result) {
+        return;
+    }
 
-    $hitlist = array();
+    $hitlist = [];
     while (!$result->EOF) {
-        list($id,$changes) = $result->fields;
+        [$id, $changes] = $result->fields;
         $hitlist[$id] = $changes;
         $result->MoveNext();
     }
@@ -113,5 +133,3 @@ function changelog_userapi_getitems($args)
 
     return $hitlist;
 }
-
-?>

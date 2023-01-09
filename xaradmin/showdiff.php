@@ -18,44 +18,76 @@ function changelog_admin_showdiff($args)
 {
     extract($args);
 
-    if (!xarVarFetch('modid',    'isset', $modid,    NULL, XARVAR_NOT_REQUIRED)) {return;}
-    if (!xarVarFetch('itemtype', 'isset', $itemtype, NULL, XARVAR_NOT_REQUIRED)) {return;}
-    if (!xarVarFetch('itemid',   'isset', $itemid,   NULL, XARVAR_NOT_REQUIRED)) {return;}
-// Note : this is an array or a string here
-    if (!xarVarFetch('logids',    'isset', $logids,   NULL, XARVAR_NOT_REQUIRED)) {return;}
+    if (!xarVarFetch('modid', 'isset', $modid, null, XARVAR_NOT_REQUIRED)) {
+        return;
+    }
+    if (!xarVarFetch('itemtype', 'isset', $itemtype, null, XARVAR_NOT_REQUIRED)) {
+        return;
+    }
+    if (!xarVarFetch('itemid', 'isset', $itemid, null, XARVAR_NOT_REQUIRED)) {
+        return;
+    }
+    // Note : this is an array or a string here
+    if (!xarVarFetch('logids', 'isset', $logids, null, XARVAR_NOT_REQUIRED)) {
+        return;
+    }
 
-    if (!xarSecurityCheck('AdminChangeLog',1,'Item',"$modid:$itemtype:$itemid")) return;
+    if (!xarSecurityCheck('AdminChangeLog', 1, 'Item', "$modid:$itemtype:$itemid")) {
+        return;
+    }
 
     // get all changes
-    $changes = xarMod::apiFunc('changelog','admin','getchanges',
-                             array('modid' => $modid,
-                                   'itemtype' => $itemtype,
-                                   'itemid' => $itemid));
-    if (empty($changes) || !is_array($changes)) return;
+    $changes = xarMod::apiFunc(
+        'changelog',
+        'admin',
+        'getchanges',
+        ['modid' => $modid,
+              'itemtype' => $itemtype,
+              'itemid' => $itemid]
+    );
+    if (empty($changes) || !is_array($changes)) {
+        return;
+    }
 
     if (empty($logids)) {
-        $logidlist = array();
+        $logidlist = [];
     } elseif (is_string($logids)) {
-        $logidlist = explode('-',$logids);
+        $logidlist = explode('-', $logids);
     } else {
         $logidlist = $logids;
     }
-    sort($logidlist,SORT_NUMERIC);
+    sort($logidlist, SORT_NUMERIC);
     if (count($logidlist) < 2) {
-        $msg = xarML('Invalid #(1) for #(2) function #(3)() in module #(4)',
-                    'number of versions', 'admin', 'showdiff', 'changelog');
-        xarErrorSet(XAR_USER_EXCEPTION, 'BAD_PARAM',
-                       new SystemException($msg));
+        $msg = xarML(
+            'Invalid #(1) for #(2) function #(3)() in module #(4)',
+            'number of versions',
+            'admin',
+            'showdiff',
+            'changelog'
+        );
+        xarErrorSet(
+            XAR_USER_EXCEPTION,
+            'BAD_PARAM',
+            new SystemException($msg)
+        );
         return;
     } elseif (!isset($changes[$logidlist[0]]) || !isset($changes[$logidlist[1]])) {
-        $msg = xarML('Invalid #(1) for #(2) function #(3)() in module #(4)',
-                    'version ids', 'admin', 'showdiff', 'changelog');
-        xarErrorSet(XAR_USER_EXCEPTION, 'BAD_PARAM',
-                       new SystemException($msg));
+        $msg = xarML(
+            'Invalid #(1) for #(2) function #(3)() in module #(4)',
+            'version ids',
+            'admin',
+            'showdiff',
+            'changelog'
+        );
+        xarErrorSet(
+            XAR_USER_EXCEPTION,
+            'BAD_PARAM',
+            new SystemException($msg)
+        );
         return;
     }
 
-    $data = array();
+    $data = [];
 
     $oldid = $logidlist[0];
     $newid = $logidlist[1];
@@ -65,7 +97,7 @@ function changelog_admin_showdiff($args)
     $nextid = 0;
     $previd = 0;
     $lastid = 0;
-    $version = array();
+    $version = [];
     foreach (array_keys($changes) as $id) {
         $version[$id] = $numchanges;
         $numchanges--;
@@ -80,42 +112,58 @@ function changelog_admin_showdiff($args)
     $data['oldversion'] = $version[$oldid];
     $data['newversion'] = $version[$newid];
     if (!empty($nextid)) {
-        $data['nextdiff'] = xarModURL('changelog','admin','showdiff',
-                                         array('modid' => $modid,
-                                               'itemtype' => $itemtype,
-                                               'itemid' => $itemid,
-                                               'logids' => $newid.'-'.$nextid));
+        $data['nextdiff'] = xarModURL(
+            'changelog',
+            'admin',
+            'showdiff',
+            ['modid' => $modid,
+                  'itemtype' => $itemtype,
+                  'itemid' => $itemid,
+                  'logids' => $newid.'-'.$nextid]
+        );
     }
     if (!empty($previd)) {
-        $data['prevdiff'] = xarModURL('changelog','admin','showdiff',
-                                         array('modid' => $modid,
-                                               'itemtype' => $itemtype,
-                                               'itemid' => $itemid,
-                                               'logids' => $previd.'-'.$oldid));
+        $data['prevdiff'] = xarModURL(
+            'changelog',
+            'admin',
+            'showdiff',
+            ['modid' => $modid,
+                  'itemtype' => $itemtype,
+                  'itemid' => $itemid,
+                  'logids' => $previd.'-'.$oldid]
+        );
     }
 
-    $data['changes'] = array();
+    $data['changes'] = [];
     $data['changes'][$newid] = $changes[$newid];
     $data['changes'][$oldid] = $changes[$oldid];
 
-    if (xarSecurityCheck('AdminChangeLog',0)) {
+    if (xarSecurityCheck('AdminChangeLog', 0)) {
         $data['showhost'] = 1;
     } else {
         $data['showhost'] = 0;
     }
 
     foreach (array_keys($data['changes']) as $logid) {
-        $data['changes'][$logid]['profile'] = xarModURL('roles','user','display',
-                                                        array('id' => $data['changes'][$logid]['editor']));
+        $data['changes'][$logid]['profile'] = xarModURL(
+            'roles',
+            'user',
+            'display',
+            ['id' => $data['changes'][$logid]['editor']]
+        );
         if (!$data['showhost']) {
             $data['changes'][$logid]['hostname'] = '';
             $data['changes'][$logid]['link'] = '';
         } else {
-            $data['changes'][$logid]['link'] = xarModURL('changelog','admin','showversion',
-                                                         array('modid' => $modid,
-                                                               'itemtype' => $itemtype,
-                                                               'itemid' => $itemid,
-                                                               'logid' => $logid));
+            $data['changes'][$logid]['link'] = xarModURL(
+                'changelog',
+                'admin',
+                'showversion',
+                ['modid' => $modid,
+                      'itemtype' => $itemtype,
+                      'itemid' => $itemid,
+                      'logid' => $logid]
+            );
         }
         if (!empty($data['changes'][$logid]['remark'])) {
             $data['changes'][$logid]['remark'] = xarVarPrepForDisplay($data['changes'][$logid]['remark']);
@@ -124,19 +172,27 @@ function changelog_admin_showdiff($args)
         $data['changes'][$logid]['version'] = $version[$logid];
     }
 
-    $data['link'] = xarModURL('changelog','admin','showlog',
-                              array('modid' => $modid,
-                                    'itemtype' => $itemtype,
-                                    'itemid' => $itemid));
+    $data['link'] = xarModURL(
+        'changelog',
+        'admin',
+        'showlog',
+        ['modid' => $modid,
+              'itemtype' => $itemtype,
+              'itemid' => $itemid]
+    );
 
     $modinfo = xarModGetInfo($modid);
     if (empty($modinfo['name'])) {
         return $data;
     }
-    $itemlinks = xarMod::apiFunc($modinfo['name'],'user','getitemlinks',
-                               array('itemtype' => $itemtype,
-                                     'itemids' => array($itemid)),
-                               0);
+    $itemlinks = xarMod::apiFunc(
+        $modinfo['name'],
+        'user',
+        'getitemlinks',
+        ['itemtype' => $itemtype,
+              'itemids' => [$itemid]],
+        0
+    );
     if (isset($itemlinks[$itemid])) {
         $data['itemlink'] = $itemlinks[$itemid]['url'];
         $data['itemtitle'] = $itemlinks[$itemid]['title'];
@@ -144,21 +200,27 @@ function changelog_admin_showdiff($args)
     }
 
     if (!empty($itemtype)) {
-        $getlist = xarModVars::get('changelog',$modinfo['name'].'.'.$itemtype);
+        $getlist = xarModVars::get('changelog', $modinfo['name'].'.'.$itemtype);
     }
     if (!isset($getlist)) {
-        $getlist = xarModVars::get('changelog',$modinfo['name']);
+        $getlist = xarModVars::get('changelog', $modinfo['name']);
     }
     if (!empty($getlist)) {
-        $fieldlist = explode(',',$getlist);
+        $fieldlist = explode(',', $getlist);
     }
 
-    $old = xarMod::apiFunc('changelog','admin','getversion',
-                         array('modid' => $modid,
-                               'itemtype' => $itemtype,
-                               'itemid' => $itemid,
-                               'logid' => $oldid));
-    if (empty($old) || !is_array($old)) return;
+    $old = xarMod::apiFunc(
+        'changelog',
+        'admin',
+        'getversion',
+        ['modid' => $modid,
+              'itemtype' => $itemtype,
+              'itemid' => $itemid,
+              'logid' => $oldid]
+    );
+    if (empty($old) || !is_array($old)) {
+        return;
+    }
 
     if (!empty($old['content'])) {
         $fields = unserialize($old['content']);
@@ -172,7 +234,7 @@ function changelog_admin_showdiff($args)
                 continue;
             }
             // skip fields we don't want here
-            if (!empty($fieldlist) && !in_array($field,$fieldlist)) {
+            if (!empty($fieldlist) && !in_array($field, $fieldlist)) {
                 continue;
             }
             if (is_array($value) || is_object($value)) {
@@ -182,15 +244,21 @@ function changelog_admin_showdiff($args)
         }
     }
     if (!isset($old['fields'])) {
-        $old['fields'] = array();
+        $old['fields'] = [];
     }
 
-    $new = xarMod::apiFunc('changelog','admin','getversion',
-                         array('modid' => $modid,
-                               'itemtype' => $itemtype,
-                               'itemid' => $itemid,
-                               'logid' => $newid));
-    if (empty($new) || !is_array($new)) return;
+    $new = xarMod::apiFunc(
+        'changelog',
+        'admin',
+        'getversion',
+        ['modid' => $modid,
+              'itemtype' => $itemtype,
+              'itemid' => $itemid,
+              'logid' => $newid]
+    );
+    if (empty($new) || !is_array($new)) {
+        return;
+    }
 
     if (!empty($new['content'])) {
         $fields = unserialize($new['content']);
@@ -204,7 +272,7 @@ function changelog_admin_showdiff($args)
                 continue;
             }
             // skip fields we don't want here
-            if (!empty($fieldlist) && !in_array($field,$fieldlist)) {
+            if (!empty($fieldlist) && !in_array($field, $fieldlist)) {
                 continue;
             }
             if (is_array($value) || is_object($value)) {
@@ -214,13 +282,13 @@ function changelog_admin_showdiff($args)
         }
     }
     if (!isset($new['fields'])) {
-        $new['fields'] = array();
+        $new['fields'] = [];
     }
 
-    $fieldlist = array_unique(array_merge(array_keys($old['fields']),array_keys($new['fields'])));
+    $fieldlist = array_unique(array_merge(array_keys($old['fields']), array_keys($new['fields'])));
     ksort($fieldlist);
 
-    $data['fields'] = array();
+    $data['fields'] = [];
     foreach ($fieldlist as $field) {
         if (!isset($old['fields'][$field])) {
             $old['fields'][$field] = '';
@@ -228,12 +296,12 @@ function changelog_admin_showdiff($args)
         if (!isset($new['fields'][$field])) {
             $new['fields'][$field] = '';
         }
-        $diff = new Diff( explode("\n",$old['fields'][$field]), explode("\n",$new['fields'][$field]));
-        $data['fields'][$field] = array();
+        $diff = new Diff(explode("\n", $old['fields'][$field]), explode("\n", $new['fields'][$field]));
+        $data['fields'][$field] = [];
         if ($diff->isEmpty()) {
             $data['fields'][$field]['diff'] = '';
         } else {
-            $fmt = new XarayaDiffFormatter;
+            $fmt = new XarayaDiffFormatter();
             $difference = $fmt->format($diff);
             $data['fields'][$field]['diff'] = nl2br($difference);
         }
@@ -248,26 +316,25 @@ sys::import('modules.changelog.xarincludes.difflib');
 
 class XarayaDiffFormatter extends UnifiedDiffFormatter
 {
-    function _block_header($xbeg, $xlen, $ybeg, $ylen)
+    public function _block_header($xbeg, $xlen, $ybeg, $ylen)
     {
         return parent::_block_header($xbeg, $xlen, $ybeg, $ylen);
     }
 
-    function _lines($lines, $prefix = '', $postfix = '')
+    public function _lines($lines, $prefix = '', $postfix = '')
     {
-        foreach ($lines as $line)
+        foreach ($lines as $line) {
             echo $prefix . xarVarPrepForDisplay($line) . $postfix . "\n";
+        }
     }
 
-    function _added($lines)
+    public function _added($lines)
     {
         $this->_lines($lines, '<ins>', '</ins>');
     }
 
-    function _deleted($lines)
+    public function _deleted($lines)
     {
         $this->_lines($lines, '<del>', '</del>');
     }
 }
-
-?>

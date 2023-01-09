@@ -24,19 +24,35 @@ function changelog_adminapi_deletehook($args)
     extract($args);
 
     if (!isset($objectid) || !is_numeric($objectid)) {
-        $msg = xarML('Invalid #(1) for #(2) function #(3)() in module #(4)',
-                    'object id', 'admin', 'deletehook', 'changelog');
-        xarErrorSet(XAR_USER_EXCEPTION, 'BAD_PARAM',
-                       new SystemException($msg));
+        $msg = xarML(
+            'Invalid #(1) for #(2) function #(3)() in module #(4)',
+            'object id',
+            'admin',
+            'deletehook',
+            'changelog'
+        );
+        xarErrorSet(
+            XAR_USER_EXCEPTION,
+            'BAD_PARAM',
+            new SystemException($msg)
+        );
         // we *must* return $extrainfo for now, or the next hook will fail
         //return false;
         return $extrainfo;
     }
     if (!isset($extrainfo) || !is_array($extrainfo)) {
-        $msg = xarML('Invalid #(1) for #(2) function #(3)() in module #(4)',
-                    'extrainfo', 'admin', 'deletehook', 'changelog');
-        xarErrorSet(XAR_USER_EXCEPTION, 'BAD_PARAM',
-                       new SystemException($msg));
+        $msg = xarML(
+            'Invalid #(1) for #(2) function #(3)() in module #(4)',
+            'extrainfo',
+            'admin',
+            'deletehook',
+            'changelog'
+        );
+        xarErrorSet(
+            XAR_USER_EXCEPTION,
+            'BAD_PARAM',
+            new SystemException($msg)
+        );
         // we *must* return $extrainfo for now, or the next hook will fail
         //return false;
         return $extrainfo;
@@ -52,10 +68,18 @@ function changelog_adminapi_deletehook($args)
 
     $modid = xarMod::getRegId($modname);
     if (empty($modid)) {
-        $msg = xarML('Invalid #(1) for #(2) function #(3)() in module #(4)',
-                    'module name', 'admin', 'deletehook', 'changelog');
-        xarErrorSet(XAR_USER_EXCEPTION, 'BAD_PARAM',
-                       new SystemException($msg));
+        $msg = xarML(
+            'Invalid #(1) for #(2) function #(3)() in module #(4)',
+            'module name',
+            'admin',
+            'deletehook',
+            'changelog'
+        );
+        xarErrorSet(
+            XAR_USER_EXCEPTION,
+            'BAD_PARAM',
+            new SystemException($msg)
+        );
         // we *must* return $extrainfo for now, or the next hook will fail
         //return false;
         return $extrainfo;
@@ -73,10 +97,18 @@ function changelog_adminapi_deletehook($args)
         $itemid = $objectid;
     }
     if (empty($itemid)) {
-        $msg = xarML('Invalid #(1) for #(2) function #(3)() in module #(4)',
-                    'item id', 'admin', 'deletehook', 'changelog');
-        xarErrorSet(XAR_USER_EXCEPTION, 'BAD_PARAM',
-                       new SystemException($msg));
+        $msg = xarML(
+            'Invalid #(1) for #(2) function #(3)() in module #(4)',
+            'item id',
+            'admin',
+            'deletehook',
+            'changelog'
+        );
+        xarErrorSet(
+            XAR_USER_EXCEPTION,
+            'BAD_PARAM',
+            new SystemException($msg)
+        );
         // we *must* return $extrainfo for now, or the next hook will fail
         //return false;
         return $extrainfo;
@@ -95,18 +127,18 @@ function changelog_adminapi_deletehook($args)
     }
     $date = time();
     $status = 'deleted';
-/*
-    if (isset($extrainfo['changelog_remark']) && is_string($extrainfo['changelog_remark'])) {
-        $remark = $extrainfo['changelog_remark'];
-    } else {
-        xarVarFetch('changelog_remark', 'str:1:', $remark, NULL, XARVAR_NOT_REQUIRED);
-        if (empty($remark)){
-            $remark = '';
+    /*
+        if (isset($extrainfo['changelog_remark']) && is_string($extrainfo['changelog_remark'])) {
+            $remark = $extrainfo['changelog_remark'];
+        } else {
+            xarVarFetch('changelog_remark', 'str:1:', $remark, NULL, XARVAR_NOT_REQUIRED);
+            if (empty($remark)){
+                $remark = '';
+            }
         }
-    }
-*/
+    */
     $remark = '';
-// probably not relevant here...
+    // probably not relevant here...
 //    $content = serialize($extrainfo);
     $content = '';
 
@@ -125,7 +157,7 @@ function changelog_adminapi_deletehook($args)
                                        xar_content)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    $bindvars = array((int) $nextId,
+    $bindvars = [(int) $nextId,
                       (int) $modid,
                       (int) $itemtype,
                       (int) $objectid,
@@ -134,7 +166,7 @@ function changelog_adminapi_deletehook($args)
                       (int) $date,
                       (string) $status,
                       (string) $remark,
-                      (string) $content);
+                      (string) $content];
 
     $result =& $dbconn->Execute($query, $bindvars);
     if (!$result) {
@@ -153,5 +185,3 @@ function changelog_adminapi_deletehook($args)
     // Return the extra info
     return $extrainfo;
 }
-
-?>

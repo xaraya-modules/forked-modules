@@ -25,19 +25,35 @@ function changelog_adminapi_updatehook($args)
     extract($args);
 
     if (!isset($objectid) || !is_numeric($objectid)) {
-        $msg = xarML('Invalid #(1) for #(2) function #(3)() in module #(4)',
-                    'object id', 'admin', 'updatehook', 'changelog');
-        xarErrorSet(XAR_USER_EXCEPTION, 'BAD_PARAM',
-                       new SystemException($msg));
+        $msg = xarML(
+            'Invalid #(1) for #(2) function #(3)() in module #(4)',
+            'object id',
+            'admin',
+            'updatehook',
+            'changelog'
+        );
+        xarErrorSet(
+            XAR_USER_EXCEPTION,
+            'BAD_PARAM',
+            new SystemException($msg)
+        );
         // we *must* return $extrainfo for now, or the next hook will fail
         //return false;
         return $extrainfo;
     }
     if (!isset($extrainfo) || !is_array($extrainfo)) {
-        $msg = xarML('Invalid #(1) for #(2) function #(3)() in module #(4)',
-                    'extrainfo', 'admin', 'updatehook', 'changelog');
-        xarErrorSet(XAR_USER_EXCEPTION, 'BAD_PARAM',
-                       new SystemException($msg));
+        $msg = xarML(
+            'Invalid #(1) for #(2) function #(3)() in module #(4)',
+            'extrainfo',
+            'admin',
+            'updatehook',
+            'changelog'
+        );
+        xarErrorSet(
+            XAR_USER_EXCEPTION,
+            'BAD_PARAM',
+            new SystemException($msg)
+        );
         // we *must* return $extrainfo for now, or the next hook will fail
         //return false;
         return $extrainfo;
@@ -53,10 +69,18 @@ function changelog_adminapi_updatehook($args)
 
     $modid = xarMod::getRegId($modname);
     if (empty($modid)) {
-        $msg = xarML('Invalid #(1) for #(2) function #(3)() in module #(4)',
-                    'module name', 'admin', 'updatehook', 'changelog');
-        xarErrorSet(XAR_USER_EXCEPTION, 'BAD_PARAM',
-                       new SystemException($msg));
+        $msg = xarML(
+            'Invalid #(1) for #(2) function #(3)() in module #(4)',
+            'module name',
+            'admin',
+            'updatehook',
+            'changelog'
+        );
+        xarErrorSet(
+            XAR_USER_EXCEPTION,
+            'BAD_PARAM',
+            new SystemException($msg)
+        );
         // we *must* return $extrainfo for now, or the next hook will fail
         //return false;
         return $extrainfo;
@@ -74,10 +98,18 @@ function changelog_adminapi_updatehook($args)
         $itemid = $objectid;
     }
     if (empty($itemid)) {
-        $msg = xarML('Invalid #(1) for #(2) function #(3)() in module #(4)',
-                    'item id', 'admin', 'updatehook', 'changelog');
-        xarErrorSet(XAR_USER_EXCEPTION, 'BAD_PARAM',
-                       new SystemException($msg));
+        $msg = xarML(
+            'Invalid #(1) for #(2) function #(3)() in module #(4)',
+            'item id',
+            'admin',
+            'updatehook',
+            'changelog'
+        );
+        xarErrorSet(
+            XAR_USER_EXCEPTION,
+            'BAD_PARAM',
+            new SystemException($msg)
+        );
         // we *must* return $extrainfo for now, or the next hook will fail
         //return false;
         return $extrainfo;
@@ -99,21 +131,21 @@ function changelog_adminapi_updatehook($args)
     if (isset($extrainfo['changelog_remark']) && is_string($extrainfo['changelog_remark'])) {
         $remark = $extrainfo['changelog_remark'];
     } else {
-        xarVarFetch('changelog_remark', 'str:1:', $remark, NULL, XARVAR_NOT_REQUIRED);
-        if (empty($remark)){
+        xarVarFetch('changelog_remark', 'str:1:', $remark, null, XARVAR_NOT_REQUIRED);
+        if (empty($remark)) {
             $remark = '';
         }
     }
     if (!empty($itemtype)) {
-        $getlist = xarModVars::get('changelog',$modname.'.'.$itemtype);
+        $getlist = xarModVars::get('changelog', $modname.'.'.$itemtype);
     }
     if (!isset($getlist)) {
-        $getlist = xarModVars::get('changelog',$modname);
+        $getlist = xarModVars::get('changelog', $modname);
     }
     if (!empty($getlist)) {
-        $fieldlist = explode(',',$getlist);
+        $fieldlist = explode(',', $getlist);
     }
-    $fields = array();
+    $fields = [];
     foreach ($extrainfo as $field => $value) {
         // skip some common uninteresting fields
         if ($field == 'module' || $field == 'itemtype' || $field == 'itemid' ||
@@ -121,28 +153,32 @@ function changelog_adminapi_updatehook($args)
             continue;
         }
         // skip fields we don't want here
-        if (!empty($fieldlist) && !in_array($field,$fieldlist)) {
+        if (!empty($fieldlist) && !in_array($field, $fieldlist)) {
             continue;
         }
         $fields[$field] = $value;
     }
     // Check if we need to include any DD fields
-    $withdd = xarModVars::get('changelog','withdd');
+    $withdd = xarModVars::get('changelog', 'withdd');
     if (empty($withdd)) {
         $withdd = '';
     }
-    $withdd = explode(';',$withdd);
-    if (xarModIsHooked('dynamicdata',$modname,$itemtype) && !empty($withdd) &&
-        (in_array($modname,$withdd) || in_array("$modname.$itemtype",$withdd))) {
+    $withdd = explode(';', $withdd);
+    if (xarModIsHooked('dynamicdata', $modname, $itemtype) && !empty($withdd) &&
+        (in_array($modname, $withdd) || in_array("$modname.$itemtype", $withdd))) {
         // Note: we need to make sure the DD hook is called before the changelog hook here
-        $ddfields = xarMod::apiFunc('dynamicdata','user','getitem',
-                                  array('module_id' => $modid,
-                                        'itemtype' => $itemtype,
-                                        'itemid' => $itemid));
+        $ddfields = xarMod::apiFunc(
+            'dynamicdata',
+            'user',
+            'getitem',
+            ['module_id' => $modid,
+                  'itemtype' => $itemtype,
+                  'itemid' => $itemid]
+        );
         if (!empty($ddfields)) {
             foreach ($ddfields as $field => $value) {
                 // skip fields we don't want here
-                if (!empty($fieldlist) && !in_array($field,$fieldlist)) {
+                if (!empty($fieldlist) && !in_array($field, $fieldlist)) {
                     continue;
                 }
                 $fields[$field] = $value;
@@ -150,7 +186,7 @@ function changelog_adminapi_updatehook($args)
         }
     }
     $content = serialize($fields);
-    $fields = array();
+    $fields = [];
 
     // Get a new changelog ID
     $nextId = $dbconn->GenId($changelogtable);
@@ -167,7 +203,7 @@ function changelog_adminapi_updatehook($args)
                                        xar_content)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    $bindvars = array((int) $nextId,
+    $bindvars = [(int) $nextId,
                       (int) $modid,
                       (int) $itemtype,
                       (int) $objectid,
@@ -176,7 +212,7 @@ function changelog_adminapi_updatehook($args)
                       (int) $date,
                       (string) $status,
                       (string) $remark,
-                      (string) $content);
+                      (string) $content];
 
     $result =& $dbconn->Execute($query, $bindvars);
 
@@ -196,6 +232,3 @@ function changelog_adminapi_updatehook($args)
     // Return the extra info
     return $extrainfo;
 }
-
-
-?>

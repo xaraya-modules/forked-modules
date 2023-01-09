@@ -17,13 +17,21 @@
 function changelog_admin_updateconfig()
 {
     // Get parameters
-    if (!xarVarFetch('changelog', 'isset', $changelog, NULL, XARVAR_NOT_REQUIRED)) return;
-    if (!xarVarFetch('includedd', 'isset', $includedd, NULL, XARVAR_NOT_REQUIRED)) return;
+    if (!xarVarFetch('changelog', 'isset', $changelog, null, XARVAR_NOT_REQUIRED)) {
+        return;
+    }
+    if (!xarVarFetch('includedd', 'isset', $includedd, null, XARVAR_NOT_REQUIRED)) {
+        return;
+    }
 
     // Confirm authorisation code
-    if (!xarSecConfirmAuthKey()) return;
+    if (!xarSecConfirmAuthKey()) {
+        return;
+    }
     // Security Check
-    if (!xarSecurityCheck('AdminChangeLog')) return;
+    if (!xarSecurityCheck('AdminChangeLog')) {
+        return;
+    }
 
     if (isset($changelog) && is_array($changelog)) {
         foreach ($changelog as $modname => $value) {
@@ -35,12 +43,10 @@ function changelog_admin_updateconfig()
         }
     }
     if (isset($includedd) && is_array($includedd)) {
-        $withdd = join(';',array_keys($includedd));
+        $withdd = join(';', array_keys($includedd));
         // Set the sort order of the changelog hooks to 999 to make sure they're called last
         if (defined('XARCORE_GENERATION') && XARCORE_GENERATION == 2) {
-
-// FIXME: change hook order in 2.x core
-
+            // FIXME: change hook order in 2.x core
         } else {
             $dbconn = xarDB::getConn();
             $xartable = xarDB::getTables();
@@ -48,15 +54,21 @@ function changelog_admin_updateconfig()
                          SET xar_order = 999
                        WHERE xar_tmodule = 'changelog'";
             $result =& $dbconn->Execute($query);
-            if (!$result) return;
+            if (!$result) {
+                return;
+            }
         }
     } else {
         $withdd = '';
     }
-    xarModVars::set('changelog','withdd',$withdd);
+    xarModVars::set('changelog', 'withdd', $withdd);
 
-    if (!xarVarFetch('numstats', 'int', $numstats, 100, XARVAR_NOT_REQUIRED)) return;
-    if (!xarVarFetch('showtitle', 'checkbox', $showtitle, false, XARVAR_NOT_REQUIRED)) return;
+    if (!xarVarFetch('numstats', 'int', $numstats, 100, XARVAR_NOT_REQUIRED)) {
+        return;
+    }
+    if (!xarVarFetch('showtitle', 'checkbox', $showtitle, false, XARVAR_NOT_REQUIRED)) {
+        return;
+    }
     xarModVars::set('changelog', 'numstats', $numstats);
     xarModVars::set('changelog', 'showtitle', $showtitle);
 
@@ -64,5 +76,3 @@ function changelog_admin_updateconfig()
 
     return true;
 }
-
-?>

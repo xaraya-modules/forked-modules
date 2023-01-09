@@ -24,11 +24,11 @@
 function changelog_admin_main()
 {
     // Security Check
-    if (!xarSecurityCheck('AdminChangeLog')) return;
+    if (!xarSecurityCheck('AdminChangeLog')) {
+        return;
+    }
 
     xarResponse::Redirect(xarModURL('changelog', 'admin', 'view'));
     // success
-    return array(); //true;
+    return []; //true;
 }
-
-?>

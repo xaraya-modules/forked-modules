@@ -22,8 +22,10 @@ function changelog_userapi_getmodules($args)
 {
     extract($args);
 
-// Security Check
-   if (!xarSecurityCheck('ReadChangeLog')) return;
+    // Security Check
+    if (!xarSecurityCheck('ReadChangeLog')) {
+        return;
+    }
 
     // Database information
     $dbconn = xarDB::getConn();
@@ -36,7 +38,7 @@ function changelog_userapi_getmodules($args)
                 FROM $changelogtable
                 WHERE xar_editor = ?
                 GROUP BY xar_moduleid, xar_itemtype";
-        $result =& $dbconn->Execute($query, array((int)$editor));
+        $result =& $dbconn->Execute($query, [(int)$editor]);
     } else {
         $query = "SELECT xar_moduleid, xar_itemtype, COUNT(DISTINCT xar_itemid), COUNT(*)
                 FROM $changelogtable
@@ -44,17 +46,17 @@ function changelog_userapi_getmodules($args)
         $result =& $dbconn->Execute($query);
     }
 
-    if (!$result) return;
+    if (!$result) {
+        return;
+    }
 
-    $modlist = array();
+    $modlist = [];
     while (!$result->EOF) {
-        list($modid,$itemtype,$numitems,$numchanges) = $result->fields;
-        $modlist[$modid][$itemtype] = array('items' => $numitems, 'changes' => $numchanges);
+        [$modid, $itemtype, $numitems, $numchanges] = $result->fields;
+        $modlist[$modid][$itemtype] = ['items' => $numitems, 'changes' => $numchanges];
         $result->MoveNext();
     }
     $result->close();
 
     return $modlist;
 }
-
-?>

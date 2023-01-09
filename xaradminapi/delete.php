@@ -26,7 +26,9 @@ function changelog_adminapi_delete($args)
 {
     extract($args);
 
-    if (!xarSecurityCheck('AdminChangeLog')) return;
+    if (!xarSecurityCheck('AdminChangeLog')) {
+        return;
+    }
 
     // Database information
     $dbconn = xarDB::getConn();
@@ -34,13 +36,21 @@ function changelog_adminapi_delete($args)
     $changelogtable = $xartable['changelog'];
 
     $query = "DELETE FROM $changelogtable ";
-    $bindvars = array();
+    $bindvars = [];
     if (!empty($modid)) {
         if (!is_numeric($modid)) {
-            $msg = xarML('Invalid #(1) for #(2) function #(3)() in module #(4)',
-                         'module id', 'admin', 'delete', 'Hitcount');
-            xarErrorSet(XAR_USER_EXCEPTION, 'BAD_PARAM',
-                            new SystemException($msg));
+            $msg = xarML(
+                'Invalid #(1) for #(2) function #(3)() in module #(4)',
+                'module id',
+                'admin',
+                'delete',
+                'Hitcount'
+            );
+            xarErrorSet(
+                XAR_USER_EXCEPTION,
+                'BAD_PARAM',
+                new SystemException($msg)
+            );
             return false;
         }
         if (empty($itemtype) || !is_numeric($itemtype)) {
@@ -61,16 +71,15 @@ function changelog_adminapi_delete($args)
             $query .= " AND xar_editor = ?";
             $bindvars[] = (int) $editor;
         }
-
     } elseif (!empty($editor) && is_numeric($editor)) {
         $query .= " WHERE xar_editor = ?";
         $bindvars[] = (int) $editor;
     }
 
     $result =& $dbconn->Execute($query, $bindvars);
-    if (!$result) return;
+    if (!$result) {
+        return;
+    }
 
     return true;
 }
-
-?>

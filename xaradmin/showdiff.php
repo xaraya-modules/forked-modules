@@ -296,7 +296,7 @@ function changelog_admin_showdiff($args)
         if (!isset($new['fields'][$field])) {
             $new['fields'][$field] = '';
         }
-        $diff = new Diff(explode("\n", $old['fields'][$field]), explode("\n", $new['fields'][$field]));
+        $diff = new \Xaraya\Modules\Changelog\Diff(explode("\n", $old['fields'][$field]), explode("\n", $new['fields'][$field]));
         $data['fields'][$field] = [];
         if ($diff->isEmpty()) {
             $data['fields'][$field]['diff'] = '';
@@ -314,7 +314,7 @@ function changelog_admin_showdiff($args)
 
 sys::import('modules.changelog.xarincludes.difflib');
 
-class XarayaDiffFormatter extends UnifiedDiffFormatter
+class XarayaDiffFormatter extends \Xaraya\Modules\Changelog\UnifiedDiffFormatter
 {
     public function _block_header($xbeg, $xlen, $ybeg, $ylen)
     {

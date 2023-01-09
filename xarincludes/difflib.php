@@ -13,6 +13,8 @@
  *
  */
 
+namespace Xaraya\Modules\Changelog;
+
 // FIXME: possibly remove assert()'s for production version?
 
 // PHP3 does not have assert()

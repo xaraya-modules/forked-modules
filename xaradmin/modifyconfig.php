@@ -24,7 +24,7 @@
 function changelog_admin_modifyconfig()
 {
     // Security Check
-    if (!xarSecurityCheck('AdminChangeLog')) {
+    if (!xarSecurity::check('AdminChangeLog')) {
         return;
     }
 
@@ -70,9 +70,9 @@ function changelog_admin_modifyconfig()
                         $link = $mytypes[$itemtype]['url'];
                     } else {
                         $type = xarML('type #(1)', $itemtype);
-                        $link = xarModURL($modname, 'user', 'view', ['itemtype' => $itemtype]);
+                        $link = xarController::URL($modname, 'user', 'view', ['itemtype' => $itemtype]);
                     }
-                    if (xarModIsHooked('dynamicdata', $modname, $itemtype)) {
+                    if (xarModHooks::isHooked('dynamicdata', $modname, $itemtype)) {
                         if (!empty($withdd) && in_array("$modname.$itemtype", $withdd)) {
                             $includedd = 2;
                         } else {
@@ -90,7 +90,7 @@ function changelog_admin_modifyconfig()
                 if (empty($changelog)) {
                     $changelog = '';
                 }
-                if (xarModIsHooked('dynamicdata', $modname)) {
+                if (xarModHooks::isHooked('dynamicdata', $modname)) {
                     if (!empty($withdd) && in_array($modname, $withdd)) {
                         $includedd = 2;
                     } else {
@@ -99,7 +99,7 @@ function changelog_admin_modifyconfig()
                 } else {
                     $includedd = 0;
                 }
-                $link = xarModURL($modname, 'user', 'main');
+                $link = xarController::URL($modname, 'user', 'main');
                 $data['settings'][$modname] = ['label' => xarML('Configuration for <a href="#(1)">#(2)</a> module', $link, $modname),
                                                     'changelog' => $changelog,
                                                     'includedd' => $includedd];
@@ -116,6 +116,6 @@ function changelog_admin_modifyconfig()
         $data['showtitle'] = 1;
     }
 
-    $data['authid'] = xarSecGenAuthKey();
+    $data['authid'] = xarSec::genAuthKey();
     return $data;
 }

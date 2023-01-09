@@ -63,7 +63,7 @@ function changelog_userapi_getitems($args)
         );
         return;
     } elseif (empty($modname)) {
-        $modinfo = xarModGetInfo($modid);
+        $modinfo = xarMod::getInfo($modid);
         $modname = $modinfo['name'];
     }
     if (empty($itemtype)) {
@@ -81,7 +81,7 @@ function changelog_userapi_getitems($args)
     }
 
     // Security Check
-    if (!xarSecurityCheck('ReadChangeLog', 1, "$modid:$itemtype:All")) {
+    if (!xarSecurity::check('ReadChangeLog', 1, "$modid:$itemtype:All")) {
         return;
     }
 

@@ -21,22 +21,22 @@ function changelog_adminapi_getmenulinks()
 {
     $menulinks = [];
     // Security Check
-    if (xarSecurityCheck('AdminChangeLog')) {
-        $menulinks[] = ['url'   => xarModURL(
+    if (xarSecurity::check('AdminChangeLog')) {
+        $menulinks[] = ['url'   => xarController::URL(
             'changelog',
             'admin',
             'view'
         ),
                               'title' => xarML('View changelog entries per module'),
                               'label' => xarML('View Changes')];
-        $menulinks[] = ['url'   => xarModURL(
+        $menulinks[] = ['url'   => xarController::URL(
             'changelog',
             'admin',
             'hooks'
         ),
                               'title' => xarML('Configure changelog hooks for other modules'),
                               'label' => xarML('Enable Hooks')];
-        $menulinks[] = ['url'   => xarModURL(
+        $menulinks[] = ['url'   => xarController::URL(
             'changelog',
             'admin',
             'modifyconfig'

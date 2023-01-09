@@ -52,7 +52,7 @@ function changelog_adminapi_createhook($args)
         if (!empty($extrainfo['module'])) {
             $modname = $extrainfo['module'];
         } else {
-            $modname = xarModGetName();
+            $modname = xarMod::getName();
         }
     }
     $modid = xarMod::getRegId($modname);
@@ -84,7 +84,7 @@ function changelog_adminapi_createhook($args)
     $xartable = xarDB::getTables();
     $changelogtable = $xartable['changelog'];
 
-    $editor = xarUserGetVar('id');
+    $editor = xarUser::getVar('id');
     $forwarded = xarServer::getVar('HTTP_X_FORWARDED_FOR');
     if (!empty($forwarded)) {
         $hostname = preg_replace('/,.*/', '', $forwarded);
@@ -96,7 +96,7 @@ function changelog_adminapi_createhook($args)
     if (isset($extrainfo['changelog_remark']) && is_string($extrainfo['changelog_remark'])) {
         $remark = $extrainfo['changelog_remark'];
     } else {
-        xarVarFetch('changelog_remark', 'str:1:', $remark, null, XARVAR_NOT_REQUIRED);
+        xarVar::fetch('changelog_remark', 'str:1:', $remark, null, xarVar::NOT_REQUIRED);
         if (empty($remark)) {
             $remark = '';
         }
@@ -130,7 +130,7 @@ function changelog_adminapi_createhook($args)
         $withdd = '';
     }
     $withdd = explode(';', $withdd);
-    if (xarModIsHooked('dynamicdata', $modname, $itemtype) && !empty($withdd) &&
+    if (xarModHooks::isHooked('dynamicdata', $modname, $itemtype) && !empty($withdd) &&
         (in_array($modname, $withdd) || in_array("$modname.$itemtype", $withdd))) {
         // Note: we need to make sure the DD hook is called before the changelog hook here
         $ddfields = xarMod::apiFunc(

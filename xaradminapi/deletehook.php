@@ -61,7 +61,7 @@ function changelog_adminapi_deletehook($args)
     // When called via hooks, the module name may be empty, so we get it from
     // the current module
     if (empty($extrainfo['module'])) {
-        $modname = xarModGetName();
+        $modname = xarMod::getName();
     } else {
         $modname = $extrainfo['module'];
     }
@@ -118,7 +118,7 @@ function changelog_adminapi_deletehook($args)
     $xartable = xarDB::getTables();
     $changelogtable = $xartable['changelog'];
 
-    $editor = xarUserGetVar('id');
+    $editor = xarUser::getVar('id');
     $forwarded = xarServer::getVar('HTTP_X_FORWARDED_FOR');
     if (!empty($forwarded)) {
         $hostname = preg_replace('/,.*/', '', $forwarded);
@@ -131,7 +131,7 @@ function changelog_adminapi_deletehook($args)
         if (isset($extrainfo['changelog_remark']) && is_string($extrainfo['changelog_remark'])) {
             $remark = $extrainfo['changelog_remark'];
         } else {
-            xarVarFetch('changelog_remark', 'str:1:', $remark, NULL, XARVAR_NOT_REQUIRED);
+            xarVar::fetch('changelog_remark', 'str:1:', $remark, NULL, xarVar::NOT_REQUIRED);
             if (empty($remark)){
                 $remark = '';
             }

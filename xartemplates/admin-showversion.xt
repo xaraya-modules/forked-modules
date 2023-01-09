@@ -58,8 +58,8 @@
                     <td class="xar-norm">
                         <xar:ml>
                             <xar:mlstring>#(1) #(2)</xar:mlstring>
-                            <xar:mlvar>#xarLocaleGetFormattedDate('medium',$date)#</xar:mlvar>
-                            <xar:mlvar>#xarLocaleGetFormattedTime('medium',$date)#</xar:mlvar>
+                            <xar:mlvar>#xarLocale::getFormattedDate('medium',$date)#</xar:mlvar>
+                            <xar:mlvar>#xarLocale::getFormattedTime('medium',$date)#</xar:mlvar>
                         </xar:ml>
                     </td>
                     <td class="xar-norm">#$remark#</td>
@@ -139,7 +139,7 @@
                         <xar:if condition="is_array($value) or is_object($value)">
                             <xar:set name="value">serialize($value)</xar:set>
                         </xar:if>
-                        <xar:set name="value">nl2br(xarVarPrepForDisplay($value))</xar:set>
+                        <xar:set name="value">nl2br(xarVar::prepForDisplay($value))</xar:set>
                         #$value#
                     </td>
                 </tr>

@@ -7,17 +7,17 @@ function changelog_admin_showlog($args)
 {
     extract($args);
 
-    if (!xarVarFetch('modid', 'isset', $modid, null, XARVAR_NOT_REQUIRED)) {
+    if (!xarVar::fetch('modid', 'isset', $modid, null, xarVar::NOT_REQUIRED)) {
         return;
     }
-    if (!xarVarFetch('itemtype', 'isset', $itemtype, null, XARVAR_NOT_REQUIRED)) {
+    if (!xarVar::fetch('itemtype', 'isset', $itemtype, null, xarVar::NOT_REQUIRED)) {
         return;
     }
-    if (!xarVarFetch('itemid', 'isset', $itemid, null, XARVAR_NOT_REQUIRED)) {
+    if (!xarVar::fetch('itemid', 'isset', $itemid, null, xarVar::NOT_REQUIRED)) {
         return;
     }
 
-    if (!xarSecurityCheck('ReadChangeLog', 1, 'Item', "$modid:$itemtype:$itemid")) {
+    if (!xarSecurity::check('ReadChangeLog', 1, 'Item', "$modid:$itemtype:$itemid")) {
         return;
     }
 
@@ -34,7 +34,7 @@ function changelog_admin_showlog($args)
         return;
     }
 
-    if (xarSecurityCheck('AdminChangeLog', 0)) {
+    if (xarSecurity::check('AdminChangeLog', 0)) {
         $data['showhost'] = 1;
     } else {
         $data['showhost'] = 0;
@@ -42,7 +42,7 @@ function changelog_admin_showlog($args)
     $numchanges = count($data['changes']);
     $data['numversions'] = $numchanges;
     foreach (array_keys($data['changes']) as $logid) {
-        $data['changes'][$logid]['profile'] = xarModURL(
+        $data['changes'][$logid]['profile'] = xarController::URL(
             'roles',
             'user',
             'display',
@@ -52,7 +52,7 @@ function changelog_admin_showlog($args)
             $data['changes'][$logid]['hostname'] = '';
             $data['changes'][$logid]['link'] = '';
         } else {
-            $data['changes'][$logid]['link'] = xarModURL(
+            $data['changes'][$logid]['link'] = xarController::URL(
                 'changelog',
                 'admin',
                 'showversion',
@@ -63,9 +63,9 @@ function changelog_admin_showlog($args)
             );
         }
         if (!empty($data['changes'][$logid]['remark'])) {
-            $data['changes'][$logid]['remark'] = xarVarPrepForDisplay($data['changes'][$logid]['remark']);
+            $data['changes'][$logid]['remark'] = xarVar::prepForDisplay($data['changes'][$logid]['remark']);
         }
-        // 2template $data['changes'][$logid]['date'] = xarLocaleFormatDate($data['changes'][$logid]['date']);
+        // 2template $data['changes'][$logid]['date'] = xarLocale::formatDate($data['changes'][$logid]['date']);
         // descending order of changes here
         $data['changes'][$logid]['version'] = $numchanges;
         $numchanges--;
@@ -78,7 +78,7 @@ function changelog_admin_showlog($args)
 
     if (count($logidlist) > 0) {
         $firstid = $logidlist[count($logidlist)-1];
-        $data['prevversion'] = xarModURL(
+        $data['prevversion'] = xarController::URL(
             'changelog',
             'admin',
             'showversion',
@@ -89,7 +89,7 @@ function changelog_admin_showlog($args)
         );
         if (count($logidlist) > 1) {
             $previd = $logidlist[count($logidlist)-2];
-            $data['prevdiff'] = xarModURL(
+            $data['prevdiff'] = xarController::URL(
                 'changelog',
                 'admin',
                 'showdiff',
@@ -102,7 +102,7 @@ function changelog_admin_showlog($args)
     }
     if (count($logidlist) > 1) {
         $lastid = $logidlist[0];
-        $data['nextversion'] = xarModURL(
+        $data['nextversion'] = xarController::URL(
             'changelog',
             'admin',
             'showversion',
@@ -113,7 +113,7 @@ function changelog_admin_showlog($args)
         );
         if (count($logidlist) > 2) {
             $nextid = $logidlist[1];
-            $data['nextdiff'] = xarModURL(
+            $data['nextdiff'] = xarController::URL(
                 'changelog',
                 'admin',
                 'showdiff',
@@ -125,7 +125,7 @@ function changelog_admin_showlog($args)
         }
     }
 
-    $modinfo = xarModGetInfo($modid);
+    $modinfo = xarMod::getInfo($modid);
     if (empty($modinfo['name'])) {
         return $data;
     }

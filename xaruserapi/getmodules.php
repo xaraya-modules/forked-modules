@@ -23,7 +23,7 @@ function changelog_userapi_getmodules($args)
     extract($args);
 
     // Security Check
-    if (!xarSecurityCheck('ReadChangeLog')) {
+    if (!xarSecurity::check('ReadChangeLog')) {
         return;
     }
 

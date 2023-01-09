@@ -58,7 +58,7 @@ function changelog_admin_modifyhook($args)
     // When called via hooks, the module name may be empty, so we get it from
     // the current module
     if (empty($extrainfo['module'])) {
-        $modname = xarModGetName();
+        $modname = xarMod::getName();
     } else {
         $modname = $extrainfo['module'];
     }
@@ -95,14 +95,14 @@ function changelog_admin_modifyhook($args)
     if (!empty($extrainfo['changelog_remark'])) {
         $remark = $extrainfo['changelog_remark'];
     } else {
-        xarVarFetch('changelog_remark', 'str:1:', $remark, null, XARVAR_NOT_REQUIRED);
+        xarVar::fetch('changelog_remark', 'str:1:', $remark, null, xarVar::NOT_REQUIRED);
         if (empty($remark)) {
             $remark = '';
         }
     }
 
-    if (xarSecurityCheck('ReadChangeLog', 0, 'Item', "$modid:$itemtype:$itemid")) {
-        $link = xarModURL(
+    if (xarSecurity::check('ReadChangeLog', 0, 'Item', "$modid:$itemtype:$itemid")) {
+        $link = xarController::URL(
             'changelog',
             'admin',
             'showlog',
@@ -114,7 +114,7 @@ function changelog_admin_modifyhook($args)
         $link = '';
     }
 
-    return xarTplModule(
+    return xarTpl::module(
         'changelog',
         'admin',
         'modifyhook',

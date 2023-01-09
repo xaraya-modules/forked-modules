@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <xar:template xmlns:xar="http://xaraya.com/2004/blocklayout">
 <xar:if condition="$showhost">
-    <a href="#$link#">Last modified</a> on #xarLocaleGetFormattedDate('medium',$date)# #xarLocaleGetFormattedTime('medium',$date)# by <a href="#$profile#">#$editorname#</a> [#$hostname#]
+    <a href="#$link#">Last modified</a> on #xarLocale::getFormattedDate('medium',$date)# #xarLocale::getFormattedTime('medium',$date)# by <a href="#$profile#">#$editorname#</a> [#$hostname#]
     <xar:if condition="!empty($remark)">
         <div>Remark: #$remark#</div>
     </xar:if>
 <xar:else />
-    Last modified on #xarLocaleGetFormattedDate('medium',$date)# #xarLocaleGetFormattedTime('medium',$date)# by <a href="#$profile#">#$editorname#</a>
+    Last modified on #xarLocale::getFormattedDate('medium',$date)# #xarLocale::getFormattedTime('medium',$date)# by <a href="#$profile#">#$editorname#</a>
 </xar:if>
 </xar:template>

@@ -60,7 +60,7 @@ function changelog_user_displayhook($args)
     if (is_array($extrainfo) && !empty($extrainfo['module']) && is_string($extrainfo['module'])) {
         $modname = $extrainfo['module'];
     } else {
-        $modname = xarModGetName();
+        $modname = xarMod::getName();
     }
 
     $modid = xarMod::getRegId($modname);
@@ -108,13 +108,13 @@ function changelog_user_displayhook($args)
 
     $data = array_pop($changes);
 
-    if (xarSecurityCheck('AdminChangeLog', 0)) {
+    if (xarSecurity::check('AdminChangeLog', 0)) {
         $data['showhost'] = 1;
     } else {
         $data['showhost'] = 0;
     }
 
-    $data['profile'] = xarModURL(
+    $data['profile'] = xarController::URL(
         'roles',
         'user',
         'display',
@@ -124,9 +124,9 @@ function changelog_user_displayhook($args)
         $data['hostname'] = '';
     }
     if (!empty($data['remark'])) {
-        $data['remark'] = xarVarPrepForDisplay($data['remark']);
+        $data['remark'] = xarVar::prepForDisplay($data['remark']);
     }
-    $data['link'] = xarModURL(
+    $data['link'] = xarController::URL(
         'changelog',
         'admin',
         'showlog',
@@ -136,7 +136,7 @@ function changelog_user_displayhook($args)
     );
 
     // TODO: use custom template per module + itemtype ?
-    return xarTplModule(
+    return xarTpl::module(
         'changelog',
         'user',
         'displayhook',

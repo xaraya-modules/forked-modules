@@ -17,19 +17,19 @@
 function changelog_admin_updateconfig()
 {
     // Get parameters
-    if (!xarVarFetch('changelog', 'isset', $changelog, null, XARVAR_NOT_REQUIRED)) {
+    if (!xarVar::fetch('changelog', 'isset', $changelog, null, xarVar::NOT_REQUIRED)) {
         return;
     }
-    if (!xarVarFetch('includedd', 'isset', $includedd, null, XARVAR_NOT_REQUIRED)) {
+    if (!xarVar::fetch('includedd', 'isset', $includedd, null, xarVar::NOT_REQUIRED)) {
         return;
     }
 
     // Confirm authorisation code
-    if (!xarSecConfirmAuthKey()) {
+    if (!xarSec::confirmAuthKey()) {
         return;
     }
     // Security Check
-    if (!xarSecurityCheck('AdminChangeLog')) {
+    if (!xarSecurity::check('AdminChangeLog')) {
         return;
     }
 
@@ -63,16 +63,16 @@ function changelog_admin_updateconfig()
     }
     xarModVars::set('changelog', 'withdd', $withdd);
 
-    if (!xarVarFetch('numstats', 'int', $numstats, 100, XARVAR_NOT_REQUIRED)) {
+    if (!xarVar::fetch('numstats', 'int', $numstats, 100, xarVar::NOT_REQUIRED)) {
         return;
     }
-    if (!xarVarFetch('showtitle', 'checkbox', $showtitle, false, XARVAR_NOT_REQUIRED)) {
+    if (!xarVar::fetch('showtitle', 'checkbox', $showtitle, false, xarVar::NOT_REQUIRED)) {
         return;
     }
     xarModVars::set('changelog', 'numstats', $numstats);
     xarModVars::set('changelog', 'showtitle', $showtitle);
 
-    xarResponse::Redirect(xarModURL('changelog', 'admin', 'modifyconfig'));
+    xarResponse::Redirect(xarController::URL('changelog', 'admin', 'modifyconfig'));
 
     return true;
 }

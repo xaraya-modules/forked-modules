@@ -17,23 +17,23 @@
 function changelog_admin_delete()
 {
     // Security Check
-    if (!xarSecurityCheck('AdminChangeLog')) {
+    if (!xarSecurity::check('AdminChangeLog')) {
         return;
     }
 
-    if (!xarVarFetch('modid', 'isset', $modid, null, XARVAR_DONT_SET)) {
+    if (!xarVar::fetch('modid', 'isset', $modid, null, xarVar::DONT_SET)) {
         return;
     }
-    if (!xarVarFetch('itemtype', 'isset', $itemtype, null, XARVAR_DONT_SET)) {
+    if (!xarVar::fetch('itemtype', 'isset', $itemtype, null, xarVar::DONT_SET)) {
         return;
     }
-    if (!xarVarFetch('itemid', 'isset', $itemid, null, XARVAR_DONT_SET)) {
+    if (!xarVar::fetch('itemid', 'isset', $itemid, null, xarVar::DONT_SET)) {
         return;
     }
-    if (!xarVarFetch('confirm', 'str:1:', $confirm, '', XARVAR_NOT_REQUIRED)) {
+    if (!xarVar::fetch('confirm', 'str:1:', $confirm, '', xarVar::NOT_REQUIRED)) {
         return;
     }
-    if (!xarVarFetch('editor', 'isset', $editor, null, XARVAR_DONT_SET)) {
+    if (!xarVar::fetch('editor', 'isset', $editor, null, xarVar::DONT_SET)) {
         return;
     }
 
@@ -47,7 +47,7 @@ function changelog_admin_delete()
 
         $what = '';
         if (!empty($modid)) {
-            $modinfo = xarModGetInfo($modid);
+            $modinfo = xarMod::getInfo($modid);
             if (empty($itemtype)) {
                 $data['modname'] = ucwords($modinfo['displayname']);
             } else {
@@ -69,12 +69,12 @@ function changelog_admin_delete()
         }
         $data['confirmbutton'] = xarML('Confirm');
         // Generate a one-time authorisation code for this operation
-        $data['authid'] = xarSecGenAuthKey();
+        $data['authid'] = xarSec::genAuthKey();
         // Return the template variables defined in this function
         return $data;
     }
 
-    if (!xarSecConfirmAuthKey()) {
+    if (!xarSec::confirmAuthKey()) {
         return;
     }
 
@@ -93,6 +93,6 @@ function changelog_admin_delete()
     )) {
         return;
     }
-    xarResponse::Redirect(xarModURL('changelog', 'admin', 'view'));
+    xarResponse::Redirect(xarController::URL('changelog', 'admin', 'view'));
     return true;
 }

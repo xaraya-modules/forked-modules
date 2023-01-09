@@ -18,21 +18,21 @@ function changelog_admin_showdiff($args)
 {
     extract($args);
 
-    if (!xarVarFetch('modid', 'isset', $modid, null, XARVAR_NOT_REQUIRED)) {
+    if (!xarVar::fetch('modid', 'isset', $modid, null, xarVar::NOT_REQUIRED)) {
         return;
     }
-    if (!xarVarFetch('itemtype', 'isset', $itemtype, null, XARVAR_NOT_REQUIRED)) {
+    if (!xarVar::fetch('itemtype', 'isset', $itemtype, null, xarVar::NOT_REQUIRED)) {
         return;
     }
-    if (!xarVarFetch('itemid', 'isset', $itemid, null, XARVAR_NOT_REQUIRED)) {
+    if (!xarVar::fetch('itemid', 'isset', $itemid, null, xarVar::NOT_REQUIRED)) {
         return;
     }
     // Note : this is an array or a string here
-    if (!xarVarFetch('logids', 'isset', $logids, null, XARVAR_NOT_REQUIRED)) {
+    if (!xarVar::fetch('logids', 'isset', $logids, null, xarVar::NOT_REQUIRED)) {
         return;
     }
 
-    if (!xarSecurityCheck('AdminChangeLog', 1, 'Item', "$modid:$itemtype:$itemid")) {
+    if (!xarSecurity::check('AdminChangeLog', 1, 'Item', "$modid:$itemtype:$itemid")) {
         return;
     }
 
@@ -112,7 +112,7 @@ function changelog_admin_showdiff($args)
     $data['oldversion'] = $version[$oldid];
     $data['newversion'] = $version[$newid];
     if (!empty($nextid)) {
-        $data['nextdiff'] = xarModURL(
+        $data['nextdiff'] = xarController::URL(
             'changelog',
             'admin',
             'showdiff',
@@ -123,7 +123,7 @@ function changelog_admin_showdiff($args)
         );
     }
     if (!empty($previd)) {
-        $data['prevdiff'] = xarModURL(
+        $data['prevdiff'] = xarController::URL(
             'changelog',
             'admin',
             'showdiff',
@@ -138,14 +138,14 @@ function changelog_admin_showdiff($args)
     $data['changes'][$newid] = $changes[$newid];
     $data['changes'][$oldid] = $changes[$oldid];
 
-    if (xarSecurityCheck('AdminChangeLog', 0)) {
+    if (xarSecurity::check('AdminChangeLog', 0)) {
         $data['showhost'] = 1;
     } else {
         $data['showhost'] = 0;
     }
 
     foreach (array_keys($data['changes']) as $logid) {
-        $data['changes'][$logid]['profile'] = xarModURL(
+        $data['changes'][$logid]['profile'] = xarController::URL(
             'roles',
             'user',
             'display',
@@ -155,7 +155,7 @@ function changelog_admin_showdiff($args)
             $data['changes'][$logid]['hostname'] = '';
             $data['changes'][$logid]['link'] = '';
         } else {
-            $data['changes'][$logid]['link'] = xarModURL(
+            $data['changes'][$logid]['link'] = xarController::URL(
                 'changelog',
                 'admin',
                 'showversion',
@@ -166,13 +166,13 @@ function changelog_admin_showdiff($args)
             );
         }
         if (!empty($data['changes'][$logid]['remark'])) {
-            $data['changes'][$logid]['remark'] = xarVarPrepForDisplay($data['changes'][$logid]['remark']);
+            $data['changes'][$logid]['remark'] = xarVar::prepForDisplay($data['changes'][$logid]['remark']);
         }
-        // 2template $data['changes'][$logid]['date'] = xarLocaleFormatDate($data['changes'][$logid]['date']);
+        // 2template $data['changes'][$logid]['date'] = xarLocale::formatDate($data['changes'][$logid]['date']);
         $data['changes'][$logid]['version'] = $version[$logid];
     }
 
-    $data['link'] = xarModURL(
+    $data['link'] = xarController::URL(
         'changelog',
         'admin',
         'showlog',
@@ -181,7 +181,7 @@ function changelog_admin_showdiff($args)
               'itemid' => $itemid]
     );
 
-    $modinfo = xarModGetInfo($modid);
+    $modinfo = xarMod::getInfo($modid);
     if (empty($modinfo['name'])) {
         return $data;
     }
@@ -305,8 +305,8 @@ function changelog_admin_showdiff($args)
             $difference = $fmt->format($diff);
             $data['fields'][$field]['diff'] = nl2br($difference);
         }
-        $data['fields'][$field]['old'] = nl2br(xarVarPrepForDisplay($old['fields'][$field]));
-        $data['fields'][$field]['new'] = nl2br(xarVarPrepForDisplay($new['fields'][$field]));
+        $data['fields'][$field]['old'] = nl2br(xarVar::prepForDisplay($old['fields'][$field]));
+        $data['fields'][$field]['new'] = nl2br(xarVar::prepForDisplay($new['fields'][$field]));
     }
 
     return $data;
@@ -324,7 +324,7 @@ class XarayaDiffFormatter extends UnifiedDiffFormatter
     public function _lines($lines, $prefix = '', $postfix = '')
     {
         foreach ($lines as $line) {
-            echo $prefix . xarVarPrepForDisplay($line) . $postfix . "\n";
+            echo $prefix . xarVar::prepForDisplay($line) . $postfix . "\n";
         }
     }
 

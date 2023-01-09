@@ -22,26 +22,26 @@ function changelog_admin_showversion($args)
     // List of currently supported restore modules (see API calls below)
     $supported = ['articles', 'dynamicdata', 'xarpages'];
 
-    if (!xarVarFetch('modid', 'isset', $modid, null, XARVAR_NOT_REQUIRED)) {
+    if (!xarVar::fetch('modid', 'isset', $modid, null, xarVar::NOT_REQUIRED)) {
         return;
     }
-    if (!xarVarFetch('itemtype', 'isset', $itemtype, null, XARVAR_NOT_REQUIRED)) {
+    if (!xarVar::fetch('itemtype', 'isset', $itemtype, null, xarVar::NOT_REQUIRED)) {
         return;
     }
-    if (!xarVarFetch('itemid', 'isset', $itemid, null, XARVAR_NOT_REQUIRED)) {
+    if (!xarVar::fetch('itemid', 'isset', $itemid, null, xarVar::NOT_REQUIRED)) {
         return;
     }
-    if (!xarVarFetch('logid', 'isset', $logid, null, XARVAR_NOT_REQUIRED)) {
+    if (!xarVar::fetch('logid', 'isset', $logid, null, xarVar::NOT_REQUIRED)) {
         return;
     }
-    if (!xarVarFetch('restore', 'isset', $restore, null, XARVAR_NOT_REQUIRED)) {
+    if (!xarVar::fetch('restore', 'isset', $restore, null, xarVar::NOT_REQUIRED)) {
         return;
     }
-    if (!xarVarFetch('confirm', 'isset', $confirm, null, XARVAR_NOT_REQUIRED)) {
+    if (!xarVar::fetch('confirm', 'isset', $confirm, null, xarVar::NOT_REQUIRED)) {
         return;
     }
 
-    if (!xarSecurityCheck('AdminChangeLog', 1, 'Item', "$modid:$itemtype:$itemid")) {
+    if (!xarSecurity::check('AdminChangeLog', 1, 'Item', "$modid:$itemtype:$itemid")) {
         return;
     }
 
@@ -58,13 +58,13 @@ function changelog_admin_showversion($args)
         return;
     }
 
-    if (xarSecurityCheck('AdminChangeLog', 0)) {
+    if (xarSecurity::check('AdminChangeLog', 0)) {
         $data['showhost'] = 1;
     } else {
         $data['showhost'] = 0;
     }
 
-    $data['profile'] = xarModURL(
+    $data['profile'] = xarController::URL(
         'roles',
         'user',
         'display',
@@ -74,11 +74,11 @@ function changelog_admin_showversion($args)
         $data['hostname'] = '';
     }
     if (!empty($data['remark'])) {
-        $data['remark'] = xarVarPrepForDisplay($data['remark']);
+        $data['remark'] = xarVar::prepForDisplay($data['remark']);
     }
-    // 2template $data['date'] = xarLocaleFormatDate($data['date']);
+    // 2template $data['date'] = xarLocale::formatDate($data['date']);
 
-    $data['link'] = xarModURL(
+    $data['link'] = xarController::URL(
         'changelog',
         'admin',
         'showlog',
@@ -89,7 +89,7 @@ function changelog_admin_showversion($args)
 
     $data['fields'] = [];
 
-    $modinfo = xarModGetInfo($modid);
+    $modinfo = xarMod::getInfo($modid);
     if (empty($modinfo['name'])) {
         return $data;
     }
@@ -119,7 +119,7 @@ function changelog_admin_showversion($args)
     }
 
     // Check for confirmation
-    if (!empty($confirm) && !xarSecConfirmAuthKey()) {
+    if (!empty($confirm) && !xarSec::confirmAuthKey()) {
         return;
     }
 
@@ -250,7 +250,7 @@ function changelog_admin_showversion($args)
                 );
                 return false;
         }
-        xarResponse::Redirect(xarModURL(
+        xarResponse::Redirect(xarController::URL(
             'changelog',
             'admin',
             'showlog',
@@ -289,7 +289,7 @@ function changelog_admin_showversion($args)
 
     $data['version'] = $version[$logid];
     if (!empty($nextid)) {
-        $data['nextversion'] = xarModURL(
+        $data['nextversion'] = xarController::URL(
             'changelog',
             'admin',
             'showversion',
@@ -299,7 +299,7 @@ function changelog_admin_showversion($args)
                   'logid' => $nextid,
                   'restore' => $restore]
         );
-        $data['nextdiff'] = xarModURL(
+        $data['nextdiff'] = xarController::URL(
             'changelog',
             'admin',
             'showdiff',
@@ -310,7 +310,7 @@ function changelog_admin_showversion($args)
         );
     }
     if (!empty($previd)) {
-        $data['prevversion'] = xarModURL(
+        $data['prevversion'] = xarController::URL(
             'changelog',
             'admin',
             'showversion',
@@ -320,7 +320,7 @@ function changelog_admin_showversion($args)
                   'logid' => $previd,
                   'restore' => $restore]
         );
-        $data['prevdiff'] = xarModURL(
+        $data['prevdiff'] = xarController::URL(
             'changelog',
             'admin',
             'showdiff',
@@ -332,7 +332,7 @@ function changelog_admin_showversion($args)
     }
 
     if (!empty($restore)) {
-        $data['showlink'] = xarModURL(
+        $data['showlink'] = xarController::URL(
             'changelog',
             'admin',
             'showversion',
@@ -343,10 +343,10 @@ function changelog_admin_showversion($args)
         );
         $data['confirmbutton'] = xarML('Confirm');
         // Generate a one-time authorisation code for this operation
-        $data['authid'] = xarSecGenAuthKey();
+        $data['authid'] = xarSec::genAuthKey();
         $data['restore'] = 1;
     } elseif (in_array($modinfo['name'], $supported)) {
-        $data['restorelink'] = xarModURL(
+        $data['restorelink'] = xarController::URL(
             'changelog',
             'admin',
             'showversion',

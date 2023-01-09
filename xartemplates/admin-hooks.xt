@@ -14,7 +14,7 @@
             <legend>
                 Configure Changelog Hooks
             </legend>
-            <xar:set name="url">#xarModURL('changelog','admin','hooks')#</xar:set>
+            <xar:set name="url">#xarController::URL('changelog','admin','hooks')#</xar:set>
             <xar:module main="false" module="modules" type="admin" func="hooks" curhook="changelog" return_url="$url" />
         </fieldset>
     </div>

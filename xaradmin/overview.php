@@ -17,7 +17,7 @@
 function changelog_admin_overview()
 {
     /* Security Check */
-    if (!xarSecurityCheck('AdminChangeLog', 0)) {
+    if (!xarSecurity::check('AdminChangeLog', 0)) {
         return;
     }
 
@@ -27,5 +27,5 @@ function changelog_admin_overview()
      * else just call the main function that displays the overview
      */
 
-    return xarTplModule('changelog', 'admin', 'main', $data, 'main');
+    return xarTpl::module('changelog', 'admin', 'main', $data, 'main');
 }

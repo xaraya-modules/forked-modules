@@ -25,8 +25,8 @@ function changelog_init()
 
     //Load Table Maintenance API
     sys::import('xaraya.tableddl');
-    //xarDBLoadTableMaintenanceAPI();
-    $query = xarDBCreateTable(
+    //xarTableDDL::init();
+    $query = xarTableDDL::createTable(
         $xartable['changelog'],
         ['xar_logid'      => ['type'        => 'integer',
                                       'null'        => false,
@@ -85,7 +85,7 @@ function changelog_init()
         'fields'    => ['xar_moduleid','xar_itemtype','xar_itemid'],
         'unique'    => false,
     ];
-    $query = xarDBCreateIndex($changelogtable, $index);
+    $query = xarTableDDL::createIndex($changelogtable, $index);
     $result =& $dbconn->Execute($query);
     if (!$result) {
         return;
@@ -96,7 +96,7 @@ function changelog_init()
         'fields'    => ['xar_editor'],
         'unique'    => false,
     ];
-    $query = xarDBCreateIndex($changelogtable, $index);
+    $query = xarTableDDL::createIndex($changelogtable, $index);
     $result =& $dbconn->Execute($query);
     if (!$result) {
         return;
@@ -107,7 +107,7 @@ function changelog_init()
         'fields'    => ['xar_status'],
         'unique'    => false,
     ];
-    $query = xarDBCreateIndex($changelogtable, $index);
+    $query = xarTableDDL::createIndex($changelogtable, $index);
     $result =& $dbconn->Execute($query);
     if (!$result) {
         return;
@@ -118,12 +118,12 @@ function changelog_init()
     xarModVars::set('changelog', 'showtitle', false);
 
     /* // nothing to do here
-        if (!xarModRegisterHook('item', 'new', 'GUI',
+        if (!xarModHooks::register('item', 'new', 'GUI',
                                'changelog', 'admin', 'newhook')) {
             return false;
         }
     */
-    if (!xarModRegisterHook(
+    if (!xarModHooks::register(
         'item',
         'create',
         'API',
@@ -133,7 +133,7 @@ function changelog_init()
     )) {
         return false;
     }
-    if (!xarModRegisterHook(
+    if (!xarModHooks::register(
         'item',
         'modify',
         'GUI',
@@ -143,7 +143,7 @@ function changelog_init()
     )) {
         return false;
     }
-    if (!xarModRegisterHook(
+    if (!xarModHooks::register(
         'item',
         'update',
         'API',
@@ -153,7 +153,7 @@ function changelog_init()
     )) {
         return false;
     }
-    if (!xarModRegisterHook(
+    if (!xarModHooks::register(
         'item',
         'delete',
         'API',
@@ -163,7 +163,7 @@ function changelog_init()
     )) {
         return false;
     }
-    if (!xarModRegisterHook(
+    if (!xarModHooks::register(
         'module',
         'remove',
         'API',
@@ -173,7 +173,7 @@ function changelog_init()
     )) {
         return false;
     }
-    if (!xarModRegisterHook(
+    if (!xarModHooks::register(
         'item',
         'display',
         'GUI',
@@ -185,7 +185,7 @@ function changelog_init()
     }
 
     /* // TODO: show items you created/edited someday ?
-        if (!xarModRegisterHook('item', 'usermenu', 'GUI',
+        if (!xarModHooks::register('item', 'usermenu', 'GUI',
                 'changelog', 'user', 'usermenu')) {
             return false;
         }
@@ -193,15 +193,15 @@ function changelog_init()
 
     $instances = [
                        ['header' => 'external', // this keyword indicates an external "wizard"
-                             'query'  => xarModURL('changelog', 'admin', 'privileges'),
+                             'query'  => xarController::URL('changelog', 'admin', 'privileges'),
                              'limit'  => 0,
                             ],
                     ];
-    xarDefineInstance('changelog', 'Item', $instances);
+    xarPrivileges::defineInstance('changelog', 'Item', $instances);
 
     // TODO: tweak this - allow viewing changelog of "your own items" someday ?
-    xarRegisterMask('ReadChangeLog', 'All', 'changelog', 'Item', 'All:All:All', 'ACCESS_READ');
-    xarRegisterMask('AdminChangeLog', 'All', 'changelog', 'Item', 'All:All:All', 'ACCESS_ADMIN');
+    xarMasks::register('ReadChangeLog', 'All', 'changelog', 'Item', 'All:All:All', 'ACCESS_READ');
+    xarMasks::register('AdminChangeLog', 'All', 'changelog', 'Item', 'All:All:All', 'ACCESS_ADMIN');
 
     // Initialisation successful
     return true;
@@ -218,7 +218,7 @@ function changelog_upgrade($oldversion)
     switch ($oldversion) {
         case '1.0':
             // Code to upgrade from version 1.0 goes here
-            if (!xarModRegisterHook(
+            if (!xarModHooks::register(
                 'item',
                 'display',
                 'GUI',
@@ -250,10 +250,10 @@ function changelog_delete()
     $dbconn = xarDB::getConn();
     $xartable = xarDB::getTables();
 
-    xarDBLoadTableMaintenanceAPI();
+    xarTableDDL::init();
 
     // Generate the SQL to drop the table using the API
-    $query = xarDBDropTable($xartable['changelog']);
+    $query = xarTableDDL::dropTable($xartable['changelog']);
     if (empty($query)) {
         return;
     } // throw back
@@ -269,12 +269,12 @@ function changelog_delete()
 
     // Remove module hooks
     /* // nothing to do here
-        if (!xarModUnregisterHook('item', 'new', 'GUI',
+        if (!xarModHooks::unregister('item', 'new', 'GUI',
                                'changelog', 'admin', 'newhook')) {
             return false;
         }
     */
-    if (!xarModUnregisterHook(
+    if (!xarModHooks::unregister(
         'item',
         'create',
         'API',
@@ -284,7 +284,7 @@ function changelog_delete()
     )) {
         return false;
     }
-    if (!xarModUnregisterHook(
+    if (!xarModHooks::unregister(
         'item',
         'modify',
         'GUI',
@@ -294,7 +294,7 @@ function changelog_delete()
     )) {
         return false;
     }
-    if (!xarModUnregisterHook(
+    if (!xarModHooks::unregister(
         'item',
         'update',
         'API',
@@ -304,7 +304,7 @@ function changelog_delete()
     )) {
         return false;
     }
-    if (!xarModUnregisterHook(
+    if (!xarModHooks::unregister(
         'item',
         'delete',
         'API',
@@ -316,7 +316,7 @@ function changelog_delete()
     }
     // when a whole module is removed, e.g. via the modules admin screen
     // (set object ID to the module name !)
-    if (!xarModUnregisterHook(
+    if (!xarModHooks::unregister(
         'module',
         'remove',
         'API',
@@ -326,7 +326,7 @@ function changelog_delete()
     )) {
         return false;
     }
-    if (!xarModUnregisterHook(
+    if (!xarModHooks::unregister(
         'item',
         'display',
         'GUI',
@@ -337,15 +337,15 @@ function changelog_delete()
         return false;
     }
     /* // TODO: show items you created/edited someday ?
-        if (!xarModUnregisterHook('item', 'usermenu', 'GUI',
+        if (!xarModHooks::unregister('item', 'usermenu', 'GUI',
                 'changelog', 'user', 'usermenu')) {
             return false;
         }
     */
 
     // Remove Masks and Instances
-    xarRemoveMasks('changelog');
-    xarRemoveInstances('changelog');
+    xarMasks::removemasks('changelog');
+    xarPrivileges::removeInstances('changelog');
 
     // Deletion successful
     return true;

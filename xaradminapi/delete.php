@@ -26,7 +26,7 @@ function changelog_adminapi_delete($args)
 {
     extract($args);
 
-    if (!xarSecurityCheck('AdminChangeLog')) {
+    if (!xarSecurity::check('AdminChangeLog')) {
         return;
     }
 

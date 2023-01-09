@@ -42,8 +42,8 @@
                 <td class="xar-norm">
                     <xar:ml>
                         <xar:mlstring>#(1) #(2)</xar:mlstring>
-                        <xar:mlvar>#xarLocaleGetFormattedDate('medium',$change['date'])#</xar:mlvar>
-                        <xar:mlvar>#xarLocaleGetFormattedTime('medium',$change['date'])#</xar:mlvar>
+                        <xar:mlvar>#xarLocale::getFormattedDate('medium',$change['date'])#</xar:mlvar>
+                        <xar:mlvar>#xarLocale::getFormattedTime('medium',$change['date'])#</xar:mlvar>
                     </xar:ml>
                 </td>
                 <td class="xar-norm">#$change['remark']#</td>

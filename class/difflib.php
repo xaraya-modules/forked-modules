@@ -46,7 +46,7 @@ class _DiffOp_Copy extends _DiffOp
 {
     public $type = 'copy';
 
-    public function _DiffOp_Copy($orig, $final = false)
+    public function __construct($orig, $final = false)
     {
         if (!is_array($final)) {
             $final = $orig;
@@ -65,7 +65,7 @@ class _DiffOp_Delete extends _DiffOp
 {
     public $type = 'delete';
 
-    public function _DiffOp_Delete($lines)
+    public function __construct($lines)
     {
         $this->orig = $lines;
         $this->final = false;
@@ -81,7 +81,7 @@ class _DiffOp_Add extends _DiffOp
 {
     public $type = 'add';
 
-    public function _DiffOp_Add($lines)
+    public function __construct($lines)
     {
         $this->final = $lines;
         $this->orig = false;
@@ -97,7 +97,7 @@ class _DiffOp_Change extends _DiffOp
 {
     public $type = 'change';
 
-    public function _DiffOp_Change($orig, $final)
+    public function __construct($orig, $final)
     {
         $this->orig = $orig;
         $this->final = $final;
@@ -559,7 +559,7 @@ class Diff
      *        (Typically these are lines from a file.)
      * @param $to_lines array An array of strings.
      */
-    public function Diff($from_lines, $to_lines)
+    public function __construct($from_lines, $to_lines)
     {
         $eng = new _DiffEngine();
         $this->edits = $eng->diff($from_lines, $to_lines);
@@ -726,7 +726,7 @@ class MappedDiff extends Diff
      * @param $mapped_to_lines array This array should
      *  have the same number of elements as $to_lines.
      */
-    public function MappedDiff(
+    public function __construct(
         $from_lines,
         $to_lines,
         $mapped_from_lines,
@@ -942,7 +942,7 @@ class DiffFormatter
  */
 class UnifiedDiffFormatter extends DiffFormatter
 {
-    public function UnifiedDiffFormatter($context_lines = 4)
+    public function __construct($context_lines = 4)
     {
         $this->leading_context_lines = $context_lines;
         $this->trailing_context_lines = $context_lines;

@@ -11,6 +11,8 @@
  * @link http://xaraya.com/index.php/release/185.html
  * @author mikespub
  */
+sys::import('modules.changelog.class.difflib');
+
 /**
  * show the differences between 2 versions of a module item
  */
@@ -59,11 +61,11 @@ function changelog_admin_showdiff($args)
     sort($logidlist, SORT_NUMERIC);
     if (count($logidlist) < 2) {
         $msg = 'Invalid #(1) for #(2) function #(3)() in module #(4)';
-        $vars = array('number of versions', 'admin', 'showdiff', 'changelog');
+        $vars = ['number of versions', 'admin', 'showdiff', 'changelog'];
         throw new BadParameterException($vars, $msg);
     } elseif (!isset($changes[$logidlist[0]]) || !isset($changes[$logidlist[1]])) {
         $msg = 'Invalid #(1) for #(2) function #(3)() in module #(4)';
-        $vars = array('version ids', 'admin', 'showdiff', 'changelog');
+        $vars = ['version ids', 'admin', 'showdiff', 'changelog'];
         throw new BadParameterException($vars, $msg);
     }
 
@@ -291,8 +293,6 @@ function changelog_admin_showdiff($args)
 
     return $data;
 }
-
-sys::import('modules.changelog.xarincludes.difflib');
 
 class XarayaDiffFormatter extends \Xaraya\Modules\Changelog\UnifiedDiffFormatter
 {

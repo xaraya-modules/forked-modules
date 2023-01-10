@@ -32,7 +32,7 @@ function changelog_userapi_getitems($args)
     // Argument check
     if (!isset($modname) && !isset($modid)) {
         $msg = 'Invalid #(1) for #(2) function #(3)() in module #(4)';
-        $vars = array('module', 'user', 'getitems', 'changelog');
+        $vars = ['module', 'user', 'getitems', 'changelog'];
         throw new BadParameterException($vars, $msg);
     }
     if (!empty($modname)) {
@@ -40,7 +40,7 @@ function changelog_userapi_getitems($args)
     }
     if (empty($modid)) {
         $msg = 'Invalid #(1) for #(2) function #(3)() in module #(4)';
-        $vars = array('module', 'user', 'getitems', 'changelog');
+        $vars = ['module', 'user', 'getitems', 'changelog'];
         throw new BadParameterException($vars, $msg);
     } elseif (empty($modname)) {
         $modinfo = xarMod::getInfo($modid);

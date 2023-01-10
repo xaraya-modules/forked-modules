@@ -31,7 +31,7 @@ function changelog_adminapi_updatehook($args)
     $modid = $extrainfo['module_id'];
     if (empty($itemid)) {
         $msg = 'Invalid #(1) for #(2) function #(3)() in module #(4)';
-        $vars = array('item id', 'admin', 'updatehook', 'changelog');
+        $vars = ['item id', 'admin', 'updatehook', 'changelog'];
         throw new BadParameterException($vars, $msg);
     }
 

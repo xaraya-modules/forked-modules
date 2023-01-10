@@ -107,7 +107,7 @@ function changelog_admin_showversion($args)
     // Check for supported restore modules
     if (!empty($restore) && !in_array($modinfo['name'], $supported)) {
         $msg = 'Restoring items from module #(1) is currently not supported';
-        $vars = array($modinfo['name']);
+        $vars = [$modinfo['name']];
         throw new BadParameterException($vars, $msg);
     }
 
@@ -163,7 +163,7 @@ function changelog_admin_showversion($args)
     if (!empty($confirm)) {
         if (empty($data['fields'])) {
             $msg = 'Nothing to restore';
-            $vars = array();
+            $vars = [];
             throw new BadParameterException($vars, $msg);
         }
         switch ($modinfo['name']) {
@@ -229,7 +229,7 @@ function changelog_admin_showversion($args)
                 // TODO: add more restore options
             default:
                 $msg = 'Restoring items from module #(1) is currently not supported';
-                $vars = array($modinfo['name']);
+                $vars = [$modinfo['name']];
                 throw new BadParameterException($vars, $msg);
         }
         xarResponse::Redirect(xarController::URL(

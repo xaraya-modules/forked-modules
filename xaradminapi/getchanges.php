@@ -28,7 +28,7 @@ function changelog_adminapi_getchanges($args)
 
     if (!isset($modid) || !is_numeric($modid)) {
         $msg = 'Invalid #(1) for #(2) function #(3)() in module #(4)';
-        $vars = array('module id', 'admin', 'getchanges', 'changelog');
+        $vars = ['module id', 'admin', 'getchanges', 'changelog'];
         throw new BadParameterException($vars, $msg);
     }
     if (!isset($itemtype) || !is_numeric($itemtype)) {
@@ -36,7 +36,7 @@ function changelog_adminapi_getchanges($args)
     }
     if (!isset($itemid) || !is_numeric($itemid)) {
         $msg = 'Invalid #(1) for #(2) function #(3)() in module #(4)';
-        $vars = array('item id', 'admin', 'getchanges', 'changelog');
+        $vars = ['item id', 'admin', 'getchanges', 'changelog'];
         throw new BadParameterException($vars, $msg);
     }
 

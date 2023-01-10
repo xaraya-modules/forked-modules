@@ -40,7 +40,7 @@ function changelog_adminapi_delete($args)
     if (!empty($modid)) {
         if (!is_numeric($modid)) {
             $msg = 'Invalid #(1) for #(2) function #(3)() in module #(4)';
-            $vars = array('module id', 'admin', 'delete', 'changelog');
+            $vars = ['module id', 'admin', 'delete', 'changelog'];
             throw new BadParameterException($vars, $msg);
         }
         if (empty($itemtype) || !is_numeric($itemtype)) {

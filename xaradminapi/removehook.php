@@ -31,14 +31,14 @@ function changelog_adminapi_removehook($args)
     // here, because the current module is probably going to be 'modules' !!!
     if (!isset($objectid) || !is_string($objectid)) {
         $msg = 'Invalid #(1) for #(2) function #(3)() in module #(4)';
-        $vars = array('object id (= module name)', 'admin', 'removehook', 'changelog');
+        $vars = ['object id (= module name)', 'admin', 'removehook', 'changelog'];
         throw new BadParameterException($vars, $msg);
     }
 
     $modid = xarMod::getRegId($objectid);
     if (empty($modid)) {
         $msg = 'Invalid #(1) for #(2) function #(3)() in module #(4)';
-        $vars = array('module id', 'admin', 'removehook', 'changelog');
+        $vars = ['module id', 'admin', 'removehook', 'changelog'];
         throw new BadParameterException($vars, $msg);
     }
 

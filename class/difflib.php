@@ -291,7 +291,7 @@ class _DiffEngine
                 }
                 $matches = $ymatches[$line];
                 reset($matches);
-                while ([$junk, $y] = each($matches)) {
+                foreach ($matches as $junk => $y) {
                     if (empty($this->in_seq[$y])) {
                         $k = $this->_lcs_pos($y);
                         USE_ASSERTS && assert($k > 0);
@@ -299,7 +299,7 @@ class _DiffEngine
                         break;
                     }
                 }
-                while ([$junk, $y] = each($matches)) {
+                foreach ($matches as $junk => $y) {
                     if ($y > $this->seq[$k-1]) {
                         USE_ASSERTS && assert($y < $this->seq[$k]);
                         // Optimization: this is a common case:
@@ -735,7 +735,7 @@ class MappedDiff extends Diff
         assert(sizeof($from_lines) == sizeof($mapped_from_lines));
         assert(sizeof($to_lines) == sizeof($mapped_to_lines));
 
-        $this->Diff($mapped_from_lines, $mapped_to_lines);
+        parent::__construct($mapped_from_lines, $mapped_to_lines);
 
         $xi = $yi = 0;
         // Optimizing loop invariants:

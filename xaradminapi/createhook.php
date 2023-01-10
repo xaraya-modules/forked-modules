@@ -27,58 +27,11 @@ function changelog_adminapi_createhook($args)
 {
     extract($args);
 
-    if (!isset($objectid) || !is_numeric($objectid)) {
-        $msg = xarML(
-            'Invalid #(1) for #(2) function #(3)() in module #(4)',
-            'object ID',
-            'admin',
-            'createhook',
-            'changelog'
-        );
-        xarErrorSet(
-            XAR_USER_EXCEPTION,
-            'BAD_PARAM',
-            new SystemException($msg)
-        );
-        return;
-    }
-    if (!isset($extrainfo) || !is_array($extrainfo)) {
-        $extrainfo = [];
-    }
-
-    // When called via hooks, modname wil be empty, but we get it from the
-    // extrainfo or the current module
-    if (empty($modname)) {
-        if (!empty($extrainfo['module'])) {
-            $modname = $extrainfo['module'];
-        } else {
-            $modname = xarMod::getName();
-        }
-    }
-    $modid = xarMod::getRegId($modname);
-    if (empty($modid)) {
-        $msg = xarML(
-            'Invalid #(1) for #(2) function #(3)() in module #(4)',
-            'module name',
-            'admin',
-            'createhook',
-            'changelog'
-        );
-        xarErrorSet(
-            XAR_USER_EXCEPTION,
-            'BAD_PARAM',
-            new SystemException($msg)
-        );
-        return;
-    }
-
-    if (!isset($itemtype) || !is_numeric($itemtype)) {
-        if (isset($extrainfo['itemtype']) && is_numeric($extrainfo['itemtype'])) {
-            $itemtype = $extrainfo['itemtype'];
-        } else {
-            $itemtype = 0;
-        }
-    }
+    // everything is already validated in HookSubject, except possible empty objectid/itemid for create/display
+    $modname = $extrainfo['module'];
+    $itemtype = $extrainfo['itemtype'];
+    $itemid = $extrainfo['itemid'];
+    $modid = $extrainfo['module_id'];
 
     $dbconn = xarDB::getConn();
     $xartable = xarDB::getTables();
@@ -180,7 +133,7 @@ function changelog_adminapi_createhook($args)
                       (string) $remark,
                       (string) $content];
 
-    $result =& $dbconn->Execute($query, $bindvars);
+    $result = $dbconn->Execute($query, $bindvars);
     if (!$result) {
         // we *must* return $extrainfo for now, or the next hook will fail
         //return false;

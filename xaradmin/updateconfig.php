@@ -53,7 +53,7 @@ function changelog_admin_updateconfig()
             $query = "UPDATE $xartable[hooks]
                          SET xar_order = 999
                        WHERE xar_tmodule = 'changelog'";
-            $result =& $dbconn->Execute($query);
+            $result = $dbconn->Execute($query);
             if (!$result) {
                 return;
             }

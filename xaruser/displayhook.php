@@ -23,74 +23,11 @@ function changelog_user_displayhook($args)
 {
     extract($args);
 
-    if (!isset($extrainfo)) {
-        $msg = xarML(
-            'Invalid #(1) for #(2) function #(3)() in module #(4)',
-            'extrainfo',
-            'user',
-            'displayhook',
-            'changelog'
-        );
-        xarErrorSet(
-            XAR_USER_EXCEPTION,
-            'BAD_PARAM',
-            new SystemException($msg)
-        );
-        return $msg;
-    }
-
-    if (!isset($objectid) || !is_numeric($objectid)) {
-        $msg = xarML(
-            'Invalid #(1) for #(2) function #(3)() in module #(4)',
-            'object ID',
-            'user',
-            'displayhook',
-            'changelog'
-        );
-        xarErrorSet(
-            XAR_USER_EXCEPTION,
-            'BAD_PARAM',
-            new SystemException($msg)
-        );
-        return $msg;
-    }
-
-    // When called via hooks, the module name may be empty, so we get it from
-    // the current module
-    if (is_array($extrainfo) && !empty($extrainfo['module']) && is_string($extrainfo['module'])) {
-        $modname = $extrainfo['module'];
-    } else {
-        $modname = xarMod::getName();
-    }
-
-    $modid = xarMod::getRegId($modname);
-    if (empty($modid)) {
-        $msg = xarML(
-            'Invalid #(1) for #(2) function #(3)() in module #(4)',
-            'module name ' . $modname,
-            'user',
-            'displayhook',
-            'changelog'
-        );
-        xarErrorSet(
-            XAR_USER_EXCEPTION,
-            'BAD_PARAM',
-            new SystemException($msg)
-        );
-        return $msg;
-    }
-
-    if (is_array($extrainfo) && isset($extrainfo['itemtype']) && is_numeric($extrainfo['itemtype'])) {
-        $itemtype = $extrainfo['itemtype'];
-    } else {
-        $itemtype = 0;
-    }
-
-    if (is_array($extrainfo) && isset($extrainfo['itemid']) && is_numeric($extrainfo['itemid'])) {
-        $itemid = $extrainfo['itemid'];
-    } else {
-        $itemid = $objectid;
-    }
+    // everything is already validated in HookSubject, except possible empty objectid/itemid for create/display
+    $modname = $extrainfo['module'];
+    $itemtype = $extrainfo['itemtype'];
+    $itemid = $extrainfo['itemid'];
+    $modid = $extrainfo['module_id'];
 
     $changes = xarMod::apiFunc(
         'changelog',

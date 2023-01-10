@@ -31,37 +31,17 @@ function changelog_userapi_getitems($args)
 
     // Argument check
     if (!isset($modname) && !isset($modid)) {
-        $msg = xarML(
-            'Invalid #(1) for #(2) function #(3)() in module #(4)',
-            'module',
-            'user',
-            'getitems',
-            'changelog'
-        );
-        xarErrorSet(
-            XAR_USER_EXCEPTION,
-            'BAD_PARAM',
-            new SystemException($msg)
-        );
-        return;
+        $msg = 'Invalid #(1) for #(2) function #(3)() in module #(4)';
+        $vars = array('module', 'user', 'getitems', 'changelog');
+        throw new BadParameterException($vars, $msg);
     }
     if (!empty($modname)) {
         $modid = xarMod::getRegId($modname);
     }
     if (empty($modid)) {
-        $msg = xarML(
-            'Invalid #(1) for #(2) function #(3)() in module #(4)',
-            'module',
-            'user',
-            'getitems',
-            'changelog'
-        );
-        xarErrorSet(
-            XAR_USER_EXCEPTION,
-            'BAD_PARAM',
-            new SystemException($msg)
-        );
-        return;
+        $msg = 'Invalid #(1) for #(2) function #(3)() in module #(4)';
+        $vars = array('module', 'user', 'getitems', 'changelog');
+        throw new BadParameterException($vars, $msg);
     } elseif (empty($modname)) {
         $modinfo = xarMod::getInfo($modid);
         $modname = $modinfo['name'];
@@ -117,7 +97,7 @@ function changelog_userapi_getitems($args)
     if (!empty($numitems) && !empty($startnum)) {
         $result = $dbconn->SelectLimit($query, $numitems, $startnum - 1, $bindvars);
     } else {
-        $result =& $dbconn->Execute($query, $bindvars);
+        $result = $dbconn->Execute($query, $bindvars);
     }
     if (!$result) {
         return;

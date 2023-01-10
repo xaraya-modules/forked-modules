@@ -26,52 +26,22 @@ function changelog_adminapi_getversion($args)
     extract($args);
 
     if (!isset($modid) || !is_numeric($modid)) {
-        $msg = xarML(
-            'Invalid #(1) for #(2) function #(3)() in module #(4)',
-            'module id',
-            'admin',
-            'getversion',
-            'changelog'
-        );
-        xarErrorSet(
-            XAR_USER_EXCEPTION,
-            'BAD_PARAM',
-            new SystemException($msg)
-        );
-        return;
+        $msg = 'Invalid #(1) for #(2) function #(3)() in module #(4)';
+        $vars = array('module id', 'admin', 'getversion', 'changelog');
+        throw new BadParameterException($vars, $msg);
     }
     if (!isset($itemtype) || !is_numeric($itemtype)) {
         $itemtype = 0;
     }
     if (!isset($itemid) || !is_numeric($itemid)) {
-        $msg = xarML(
-            'Invalid #(1) for #(2) function #(3)() in module #(4)',
-            'item id',
-            'admin',
-            'getversion',
-            'changelog'
-        );
-        xarErrorSet(
-            XAR_USER_EXCEPTION,
-            'BAD_PARAM',
-            new SystemException($msg)
-        );
-        return;
+        $msg = 'Invalid #(1) for #(2) function #(3)() in module #(4)';
+        $vars = array('item id', 'admin', 'getversion', 'changelog');
+        throw new BadParameterException($vars, $msg);
     }
     if (!isset($logid) || !is_numeric($logid)) {
-        $msg = xarML(
-            'Invalid #(1) for #(2) function #(3)() in module #(4)',
-            'log id',
-            'admin',
-            'getversion',
-            'changelog'
-        );
-        xarErrorSet(
-            XAR_USER_EXCEPTION,
-            'BAD_PARAM',
-            new SystemException($msg)
-        );
-        return;
+        $msg = 'Invalid #(1) for #(2) function #(3)() in module #(4)';
+        $vars = array('log id', 'admin', 'getversion', 'changelog');
+        throw new BadParameterException($vars, $msg);
     }
 
     $dbconn = xarDB::getConn();
@@ -98,7 +68,7 @@ function changelog_adminapi_getversion($args)
 
     $bindvars = [(int) $modid, (int) $itemtype, (int) $itemid, (int) $logid];
 
-    $result =& $dbconn->Execute($query, $bindvars);
+    $result = $dbconn->Execute($query, $bindvars);
     if (!$result) {
         return;
     }

@@ -75,7 +75,7 @@ function changelog_init()
     } // throw back
 
     // Pass the Table Create DDL to adodb to create the table and send exception if unsuccessful
-    $result = &$dbconn->Execute($query);
+    $result = $dbconn->Execute($query);
     if (!$result) {
         return;
     }
@@ -86,7 +86,7 @@ function changelog_init()
         'unique'    => false,
     ];
     $query = xarTableDDL::createIndex($changelogtable, $index);
-    $result =& $dbconn->Execute($query);
+    $result = $dbconn->Execute($query);
     if (!$result) {
         return;
     }
@@ -97,7 +97,7 @@ function changelog_init()
         'unique'    => false,
     ];
     $query = xarTableDDL::createIndex($changelogtable, $index);
-    $result =& $dbconn->Execute($query);
+    $result = $dbconn->Execute($query);
     if (!$result) {
         return;
     }
@@ -108,7 +108,7 @@ function changelog_init()
         'unique'    => false,
     ];
     $query = xarTableDDL::createIndex($changelogtable, $index);
-    $result =& $dbconn->Execute($query);
+    $result = $dbconn->Execute($query);
     if (!$result) {
         return;
     }
@@ -250,6 +250,7 @@ function changelog_delete()
     $dbconn = xarDB::getConn();
     $xartable = xarDB::getTables();
 
+    sys::import('xaraya.tableddl');
     xarTableDDL::init();
 
     // Generate the SQL to drop the table using the API
@@ -259,7 +260,7 @@ function changelog_delete()
     } // throw back
 
     // Drop the table and send exception if returns false.
-    $result = &$dbconn->Execute($query);
+    $result = $dbconn->Execute($query);
     if (!$result) {
         return;
     }

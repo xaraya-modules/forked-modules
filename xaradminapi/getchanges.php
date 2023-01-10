@@ -27,37 +27,17 @@ function changelog_adminapi_getchanges($args)
     extract($args);
 
     if (!isset($modid) || !is_numeric($modid)) {
-        $msg = xarML(
-            'Invalid #(1) for #(2) function #(3)() in module #(4)',
-            'module id',
-            'admin',
-            'getchanges',
-            'changelog'
-        );
-        xarErrorSet(
-            XAR_USER_EXCEPTION,
-            'BAD_PARAM',
-            new SystemException($msg)
-        );
-        return;
+        $msg = 'Invalid #(1) for #(2) function #(3)() in module #(4)';
+        $vars = array('module id', 'admin', 'getchanges', 'changelog');
+        throw new BadParameterException($vars, $msg);
     }
     if (!isset($itemtype) || !is_numeric($itemtype)) {
         $itemtype = 0;
     }
     if (!isset($itemid) || !is_numeric($itemid)) {
-        $msg = xarML(
-            'Invalid #(1) for #(2) function #(3)() in module #(4)',
-            'item id',
-            'admin',
-            'getchanges',
-            'changelog'
-        );
-        xarErrorSet(
-            XAR_USER_EXCEPTION,
-            'BAD_PARAM',
-            new SystemException($msg)
-        );
-        return;
+        $msg = 'Invalid #(1) for #(2) function #(3)() in module #(4)';
+        $vars = array('item id', 'admin', 'getchanges', 'changelog');
+        throw new BadParameterException($vars, $msg);
     }
 
     $dbconn = xarDB::getConn();
@@ -87,9 +67,9 @@ function changelog_adminapi_getchanges($args)
         if (empty($startnum)) {
             $startnum = 1;
         }
-        $result =& $dbconn->SelectLimit($query, $numitems, $startnum-1, $bindvars);
+        $result = $dbconn->SelectLimit($query, $numitems, $startnum-1, $bindvars);
     } else {
-        $result =& $dbconn->Execute($query, $bindvars);
+        $result = $dbconn->Execute($query, $bindvars);
     }
     if (!$result) {
         return;

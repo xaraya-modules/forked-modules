@@ -106,16 +106,9 @@ function changelog_admin_showversion($args)
 
     // Check for supported restore modules
     if (!empty($restore) && !in_array($modinfo['name'], $supported)) {
-        $msg = xarML(
-            'Restoring items from module #(1) is currently not supported',
-            $modinfo['name']
-        );
-        xarErrorSet(
-            XAR_USER_EXCEPTION,
-            'BAD_PARAM',
-            new SystemException($msg)
-        );
-        return false;
+        $msg = 'Restoring items from module #(1) is currently not supported';
+        $vars = array($modinfo['name']);
+        throw new BadParameterException($vars, $msg);
     }
 
     // Check for confirmation
@@ -169,13 +162,9 @@ function changelog_admin_showversion($args)
     // Restore this version of the module item
     if (!empty($confirm)) {
         if (empty($data['fields'])) {
-            $msg = xarML('Nothing to restore');
-            xarErrorSet(
-                XAR_USER_EXCEPTION,
-                'BAD_PARAM',
-                new SystemException($msg)
-            );
-            return false;
+            $msg = 'Nothing to restore';
+            $vars = array();
+            throw new BadParameterException($vars, $msg);
         }
         switch ($modinfo['name']) {
             case 'articles':
@@ -239,16 +228,9 @@ function changelog_admin_showversion($args)
 
                 // TODO: add more restore options
             default:
-                $msg = xarML(
-                    'Restoring items from module #(1) is currently not supported',
-                    $modinfo['name']
-                );
-                xarErrorSet(
-                    XAR_USER_EXCEPTION,
-                    'BAD_PARAM',
-                    new SystemException($msg)
-                );
-                return false;
+                $msg = 'Restoring items from module #(1) is currently not supported';
+                $vars = array($modinfo['name']);
+                throw new BadParameterException($vars, $msg);
         }
         xarResponse::Redirect(xarController::URL(
             'changelog',

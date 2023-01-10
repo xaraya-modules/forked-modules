@@ -39,19 +39,9 @@ function changelog_adminapi_delete($args)
     $bindvars = [];
     if (!empty($modid)) {
         if (!is_numeric($modid)) {
-            $msg = xarML(
-                'Invalid #(1) for #(2) function #(3)() in module #(4)',
-                'module id',
-                'admin',
-                'delete',
-                'Hitcount'
-            );
-            xarErrorSet(
-                XAR_USER_EXCEPTION,
-                'BAD_PARAM',
-                new SystemException($msg)
-            );
-            return false;
+            $msg = 'Invalid #(1) for #(2) function #(3)() in module #(4)';
+            $vars = array('module id', 'admin', 'delete', 'changelog');
+            throw new BadParameterException($vars, $msg);
         }
         if (empty($itemtype) || !is_numeric($itemtype)) {
             $itemtype = 0;
@@ -76,7 +66,7 @@ function changelog_adminapi_delete($args)
         $bindvars[] = (int) $editor;
     }
 
-    $result =& $dbconn->Execute($query, $bindvars);
+    $result = $dbconn->Execute($query, $bindvars);
     if (!$result) {
         return;
     }

@@ -104,7 +104,10 @@
                     Hint: we retrieve the DD object and then pass the $fields to checkinput(), to update the object values
                 </xar:comment>
                 <xar:set name="ddobject">xarMod::apiFunc('dynamicdata','user','getobject',array('module_id' => $modid, 'itemtype' => $itemtype, 'itemid' => $itemid))</xar:set>
-                <xar:set name="dummy">$ddobject->checkinput($fields, 1)</xar:set>
+                <xar:set name="dummy">$ddobject->getItem()</xar:set>
+                <xar:set name="curfields">$ddobject->getFieldValues([], 1)</xar:set>
+                <xar:set name="curfields">array_merge($curfields, $fields)</xar:set>
+                <xar:set name="dummy">$ddobject->checkInput($curfields, 1)</xar:set>
                 <xar:data-display object="$ddobject" />
 
             <xar:elseif condition="$modname eq 'xarpages'"/>

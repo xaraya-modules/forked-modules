@@ -232,8 +232,14 @@ function changelog_upgrade($oldversion)
         case '1.1':
             // compatability upgrade
             break;
-        case 2.0:
-            // Code to upgrade from version 2.0 goes here
+
+        case '2.0.0':
+            // Code to upgrade from version 2.0.0 goes here
+
+        case '2.1.0':
+            // Code to upgrade from version 2.1.0 goes here
+
+        default:
             break;
     }
     // Update successful

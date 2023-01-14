@@ -13,7 +13,7 @@
  */
 $modversion['name']           = 'Change Log';
 $modversion['id']             = '185';
-$modversion['version']        = '2.0.0';
+$modversion['version']        = '2.1.0';
 $modversion['displayname']    = xarML('ChangeLog');
 $modversion['description']    = 'Keep track of changes to module items';
 $modversion['credits']        = '';

@@ -239,6 +239,9 @@ function changelog_upgrade($oldversion)
         case '2.1.0':
             // Code to upgrade from version 2.1.0 goes here
 
+        case '2.1.1':
+            // Code to upgrade from version 2.1.1 goes here
+
         default:
             break;
     }

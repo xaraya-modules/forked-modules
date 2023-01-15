@@ -13,7 +13,7 @@
  *
  */
 
-namespace Xaraya\Modules\Changelog;
+namespace Xaraya\Modules\ChangeLog\DiffLib;
 
 // FIXME: possibly remove assert()'s for production version?
 

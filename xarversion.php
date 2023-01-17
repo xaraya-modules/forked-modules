@@ -13,7 +13,7 @@
  */
 $modversion['name']           = 'Change Log';
 $modversion['id']             = '185';
-$modversion['version']        = '2.1.1';
+$modversion['version']        = '2.4.1';
 $modversion['displayname']    = xarML('ChangeLog');
 $modversion['description']    = 'Keep track of changes to module items';
 $modversion['credits']        = '';
@@ -27,3 +27,10 @@ $modversion['admin']          = 1;
 $modversion['user']           = 0;
 $modversion['class']          = 'Utility';
 $modversion['category']       = 'Miscellaneous';
+$modversion['namespace']      = 'Xaraya\Modules\ChangeLog';
+$modversion['dependencyinfo'] = [
+    0 => [
+            'name' => 'Xaraya Core',
+            'version_ge' => '2.4.1',
+         ],
+];

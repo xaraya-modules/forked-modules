@@ -52,6 +52,7 @@ class ChangelogModuleRemoveObserver extends HookObserver implements ixarEventObs
         }
 
         // Get database setup
+        xarMod::loadDbInfo('changelog', 'changelog');
         $dbconn = xarDB::getConn();
         $xartable = xarDB::getTables();
 

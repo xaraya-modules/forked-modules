@@ -37,6 +37,7 @@ class ChangelogItemCreateObserver extends HookObserver implements ixarEventObser
         $itemid = $extrainfo['itemid'];
         $modid = $extrainfo['module_id'];
 
+        xarMod::loadDbInfo('changelog', 'changelog');
         $dbconn = xarDB::getConn();
         $xartable = xarDB::getTables();
         $changelogtable = $xartable['changelog'];

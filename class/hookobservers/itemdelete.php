@@ -41,6 +41,7 @@ class ChangelogItemDeleteObserver extends HookObserver implements ixarEventObser
             throw new BadParameterException($vars, $msg);
         }
 
+        xarMod::loadDbInfo('changelog', 'changelog');
         $dbconn = xarDB::getConn();
         $xartable = xarDB::getTables();
         $changelogtable = $xartable['changelog'];

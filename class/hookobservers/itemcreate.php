@@ -11,6 +11,21 @@
  * @link http://xaraya.com/index.php/release/185.html
  * @author mikespub
  */
+
+namespace Xaraya\Modules\ChangeLog\HookObservers;
+
+use HookObserver;
+use ixarEventObserver;
+use ixarEventSubject;
+use xarMod;
+use xarModVars;
+use xarModHooks;
+use xarDB;
+use xarUser;
+use xarServer;
+use xarVar;
+use sys;
+
 sys::import('xaraya.structures.hooks.observer');
 
 /**
@@ -22,7 +37,7 @@ sys::import('xaraya.structures.hooks.observer');
  * @return array extrainfo array
  * @throws BAD_PARAM, NO_PERMISSION, DATABASE_ERROR
  */
-class ChangelogItemCreateObserver extends HookObserver implements ixarEventObserver
+class ItemCreateObserver extends HookObserver implements ixarEventObserver
 {
     public $module = 'changelog';
 

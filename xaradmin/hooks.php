@@ -7,9 +7,9 @@
  * @license GPL {@link http://www.gnu.org/licenses/gpl.html}
  * @link http://www.xaraya.com
  *
- * @subpackage Hitcount Module
+ * @subpackage changelog
  * @link http://xaraya.com/index.php/release/177.html
- * @author Hitcount Module Development Team
+ * @author Change Log Module Development Team
  */
 /**
  * Hooks shows the configuration of hooks for other modules

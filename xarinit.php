@@ -113,10 +113,124 @@ function changelog_init()
         return;
     }
 
+    // @todo create table schema and use standard install
+    //$module = 'changelog';
+    //$objects = ['changelog'];
+    //if (!xarMod::apiFunc('modules', 'admin', 'standardinstall', ['module' => $module, 'objects' => $objects])) {
+    //    return;
+    //}
+
     xarModVars::set('changelog', 'SupportShortURLs', 0);
     xarModVars::set('changelog', 'numstats', 100);
     xarModVars::set('changelog', 'showtitle', false);
 
+    //changelog_create_old_hooks();
+    //changelog_create_new_hooks();
+
+    $instances = [
+                       ['header' => 'external', // this keyword indicates an external "wizard"
+                             'query'  => xarController::URL('changelog', 'admin', 'privileges'),
+                             'limit'  => 0,
+                            ],
+                    ];
+    xarPrivileges::defineInstance('changelog', 'Item', $instances);
+
+    // TODO: tweak this - allow viewing changelog of "your own items" someday ?
+    xarMasks::register('ReadChangeLog', 'All', 'changelog', 'Item', 'All:All:All', 'ACCESS_READ');
+    xarMasks::register('AdminChangeLog', 'All', 'changelog', 'Item', 'All:All:All', 'ACCESS_ADMIN');
+
+    // Initialisation successful
+    return true;
+}
+
+/**
+ * upgrade the changelog module from an old version
+ * This function can be called multiple times
+ * @return bool
+ */
+function changelog_upgrade($oldversion)
+{
+    // Upgrade dependent on old version number
+    switch ($oldversion) {
+        case '1.0':
+            // Code to upgrade from version 1.0 goes here
+            if (!xarModHooks::register(
+                'item',
+                'display',
+                'GUI',
+                'changelog',
+                'user',
+                'displayhook'
+            )) {
+                return false;
+            }
+            break;
+        case '1.1':
+            // compatability upgrade
+            break;
+
+        case '2.0.0':
+            // Code to upgrade from version 2.0.0 goes here
+
+        case '2.1.0':
+            // Code to upgrade from version 2.1.0 goes here
+
+        case '2.1.1':
+            // Code to upgrade from version 2.1.1 goes here
+
+        case '2.4.1':
+            // Code to upgrade from version 2.4.1 goes here
+            changelog_delete_old_hooks();
+            changelog_create_new_hooks();
+
+            // no break
+        case '2.4.2':
+            // Code to upgrade from version 2.4.2 goes here
+
+        case '2.4.3':
+            // Code to upgrade from version 2.4.3 goes here
+
+        default:
+            break;
+    }
+    // Update successful
+    return true;
+}
+
+function changelog_activate()
+{
+    return changelog_create_new_hooks();
+}
+
+function changelog_deactivate()
+{
+    return changelog_delete_new_hooks();
+}
+
+function changelog_create_new_hooks()
+{
+    xarHooks::registerObserver('ItemCreate', 'changelog');
+    xarHooks::registerObserver('ItemUpdate', 'changelog');
+    xarHooks::registerObserver('ItemDelete', 'changelog');
+    xarHooks::registerObserver('ModuleRemove', 'changelog');
+    xarHooks::registerObserver('ItemDisplay', 'changelog');
+    xarHooks::registerObserver('ItemModify', 'changelog');
+    return true;
+}
+
+function changelog_delete_new_hooks()
+{
+    xarHooks::unregisterObserver('ItemCreate', 'changelog');
+    xarHooks::unregisterObserver('ItemUpdate', 'changelog');
+    xarHooks::unregisterObserver('ItemDelete', 'changelog');
+    xarHooks::unregisterObserver('ModuleRemove', 'changelog');
+    xarHooks::unregisterObserver('ItemDisplay', 'changelog');
+    xarHooks::unregisterObserver('ItemModify', 'changelog');
+    return true;
+}
+
+function changelog_create_old_hooks()
+{
     /* // nothing to do here
         if (!xarModHooks::register('item', 'new', 'GUI',
                                'changelog', 'admin', 'newhook')) {
@@ -190,94 +304,10 @@ function changelog_init()
             return false;
         }
     */
-
-    $instances = [
-                       ['header' => 'external', // this keyword indicates an external "wizard"
-                             'query'  => xarController::URL('changelog', 'admin', 'privileges'),
-                             'limit'  => 0,
-                            ],
-                    ];
-    xarPrivileges::defineInstance('changelog', 'Item', $instances);
-
-    // TODO: tweak this - allow viewing changelog of "your own items" someday ?
-    xarMasks::register('ReadChangeLog', 'All', 'changelog', 'Item', 'All:All:All', 'ACCESS_READ');
-    xarMasks::register('AdminChangeLog', 'All', 'changelog', 'Item', 'All:All:All', 'ACCESS_ADMIN');
-
-    // Initialisation successful
-    return true;
 }
 
-/**
- * upgrade the changelog module from an old version
- * This function can be called multiple times
- * @return bool
- */
-function changelog_upgrade($oldversion)
+function changelog_delete_old_hooks()
 {
-    // Upgrade dependent on old version number
-    switch ($oldversion) {
-        case '1.0':
-            // Code to upgrade from version 1.0 goes here
-            if (!xarModHooks::register(
-                'item',
-                'display',
-                'GUI',
-                'changelog',
-                'user',
-                'displayhook'
-            )) {
-                return false;
-            }
-            break;
-        case '1.1':
-            // compatability upgrade
-            break;
-
-        case '2.0.0':
-            // Code to upgrade from version 2.0.0 goes here
-
-        case '2.1.0':
-            // Code to upgrade from version 2.1.0 goes here
-
-        case '2.1.1':
-            // Code to upgrade from version 2.1.1 goes here
-
-        default:
-            break;
-    }
-    // Update successful
-    return true;
-}
-
-/**
- * delete the changelog module
- * This function is only ever called once during the lifetime of a particular
- * module instance
- */
-function changelog_delete()
-{
-    $dbconn = xarDB::getConn();
-    $xartable = xarDB::getTables();
-
-    sys::import('xaraya.tableddl');
-    xarTableDDL::init();
-
-    // Generate the SQL to drop the table using the API
-    $query = xarTableDDL::dropTable($xartable['changelog']);
-    if (empty($query)) {
-        return;
-    } // throw back
-
-    // Drop the table and send exception if returns false.
-    $result = $dbconn->Execute($query);
-    if (!$result) {
-        return;
-    }
-
-    // Delete any module variables
-    xarModVars::delete('changelog', 'SupportShortURLs');
-
-    // Remove module hooks
     /* // nothing to do here
         if (!xarModHooks::unregister('item', 'new', 'GUI',
                                'changelog', 'admin', 'newhook')) {
@@ -352,6 +382,39 @@ function changelog_delete()
             return false;
         }
     */
+}
+
+/**
+ * delete the changelog module
+ * This function is only ever called once during the lifetime of a particular
+ * module instance
+ */
+function changelog_delete()
+{
+    $dbconn = xarDB::getConn();
+    $xartable = xarDB::getTables();
+
+    sys::import('xaraya.tableddl');
+    xarTableDDL::init();
+
+    // Generate the SQL to drop the table using the API
+    $query = xarTableDDL::dropTable($xartable['changelog']);
+    if (empty($query)) {
+        return;
+    } // throw back
+
+    // Drop the table and send exception if returns false.
+    $result = $dbconn->Execute($query);
+    if (!$result) {
+        return;
+    }
+
+    // Delete any module variables
+    xarModVars::delete('changelog', 'SupportShortURLs');
+
+    // Remove module hooks
+    //changelog_delete_old_hooks();
+    //changelog_delete_new_hooks();
 
     // Remove Masks and Instances
     xarMasks::removemasks('changelog');
@@ -359,4 +422,6 @@ function changelog_delete()
 
     // Deletion successful
     return true;
+    //$module = 'changelog';
+    //return xarMod::apiFunc('modules', 'admin', 'standarddeinstall', ['module' => $module]);
 }

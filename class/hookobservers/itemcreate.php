@@ -15,8 +15,9 @@
 namespace Xaraya\Modules\ChangeLog\HookObservers;
 
 use HookObserver;
-use ixarEventObserver;
+use ixarHookObserver;
 use ixarEventSubject;
+use ixarHookSubject;
 use xarMod;
 use xarModVars;
 use xarModHooks;
@@ -35,12 +36,14 @@ sys::import('xaraya.structures.hooks.observer');
  * @param $args['objectid'] ID of the object
  * @param $args['extrainfo'] extra information
  * @return array extrainfo array
- * @throws BAD_PARAM, NO_PERMISSION, DATABASE_ERROR
  */
-class ItemCreateObserver extends HookObserver implements ixarEventObserver
+class ItemCreateObserver extends HookObserver implements ixarHookObserver
 {
     public $module = 'changelog';
 
+    /**
+     * @param ixarHookSubject $subject
+     */
     public function notify(ixarEventSubject $subject)
     {
         // get extrainfo from subject (array containing module, module_id, itemtype, itemid)

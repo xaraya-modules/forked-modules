@@ -15,8 +15,9 @@
 namespace Xaraya\Modules\ChangeLog\HookObservers;
 
 use HookObserver;
-use ixarEventObserver;
+use ixarHookObserver;
 use ixarEventSubject;
+use ixarHookSubject;
 use BadParameterException;
 use xarMod;
 use xarDB;
@@ -30,12 +31,14 @@ sys::import('xaraya.structures.hooks.observer');
  * @param $args['objectid'] ID of the object (must be the module name here !!)
  * @param $args['extrainfo'] extra information
  * @return bool true on success, false on failure
- * @throws BAD_PARAM, NO_PERMISSION, DATABASE_ERROR
  */
-class ModuleRemoveObserver extends HookObserver implements ixarEventObserver
+class ModuleRemoveObserver extends HookObserver implements ixarHookObserver
 {
     public $module = 'changelog';
 
+    /**
+     * @param ixarHookSubject $subject
+     */
     public function notify(ixarEventSubject $subject)
     {
         // for module remove, we need the module name, we get that from the objectid

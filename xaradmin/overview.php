@@ -21,7 +21,7 @@ function changelog_admin_overview()
         return;
     }
 
-    $data=[];
+    $data = [];
 
     /* if there is a separate overview function return data to it
      * else just call the main function that displays the overview

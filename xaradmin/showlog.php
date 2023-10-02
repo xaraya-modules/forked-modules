@@ -77,7 +77,7 @@ function changelog_admin_showlog($args)
     $logidlist = array_keys($data['changes']);
 
     if (count($logidlist) > 0) {
-        $firstid = $logidlist[count($logidlist)-1];
+        $firstid = $logidlist[count($logidlist) - 1];
         $data['prevversion'] = xarController::URL(
             'changelog',
             'admin',
@@ -88,7 +88,7 @@ function changelog_admin_showlog($args)
                   'logid' => $firstid]
         );
         if (count($logidlist) > 1) {
-            $previd = $logidlist[count($logidlist)-2];
+            $previd = $logidlist[count($logidlist) - 2];
             $data['prevdiff'] = xarController::URL(
                 'changelog',
                 'admin',

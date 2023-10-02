@@ -83,7 +83,7 @@ class ItemDeleteObserver extends HookObserver implements ixarHookObserver
         */
         $remark = '';
         // probably not relevant here...
-    //    $content = serialize($extrainfo);
+        //    $content = serialize($extrainfo);
         $content = '';
 
         // Get a new changelog ID

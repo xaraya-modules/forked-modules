@@ -63,7 +63,7 @@ class ItemUpdateObserver extends HookObserver implements ixarHookObserver
 
         xarMod::loadDbInfo('changelog', 'changelog');
         $dbconn = xarDB::getConn();
-        $xartable =& xarDB::getTables();
+        $xartable = & xarDB::getTables();
         $changelogtable = $xartable['changelog'];
 
         $editor = xarUser::getVar('id');

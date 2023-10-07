@@ -182,7 +182,7 @@ function xarcachemanager_upgrade($oldversion)
     // check to see if we've got the necessary permissions to upgrade
     if ((!file_exists($cachingConfigFile) && !is_writable($varCacheDir)) ||
         (file_exists($cachingConfigFile) && !is_writable($cachingConfigFile))) {
-        $msg=xarMLS::translate('The xarCacheManager module upgrade has failed.  
+        $msg = xarMLS::translate('The xarCacheManager module upgrade has failed.  
                    Please make #(1) writable by the web server process 
                    owner to complete the upgrade.  If #(1) does not exist, 
                    please make #(2) writable by the web server process and 
@@ -486,7 +486,7 @@ function xarcachemanager_fs_setup($args)
     } else {
         if (!is_dir($cacheOutputDir) || !file_exists($cachingConfigFile)) {
             // tell them that cache needs to be writable or manually create output dir
-            $msg=xarMLS::translate(
+            $msg = xarMLS::translate(
                 'The #(1) directory must be writable by the web server 
                        for the install script to set up output caching for you. 
                        The xarCacheManager module has not been installed, 
@@ -507,7 +507,7 @@ function xarcachemanager_fs_setup($args)
 
     // confirm the caching config file is good to go
     if (!is_writable($cachingConfigFile)) {
-        $msg=xarMLS::translate('The #(1) file must be writable by the web server for 
+        $msg = xarMLS::translate('The #(1) file must be writable by the web server for 
                    output caching to work.', $cachingConfigFile);
         throw new Exception($msg);
     }
@@ -523,7 +523,7 @@ function xarcachemanager_fs_setup($args)
         // check if the directory already exists
         if (is_dir($setupDir)) {
             if (!is_writable($setupDir)) {
-                $msg=xarMLS::translate('The #(1) directory is not writable by the web 
+                $msg = xarMLS::translate('The #(1) directory is not writable by the web 
                            web server. The #(1) directory must be writable by the web 
                            server process owner for output caching to work. 
                            Please change the permission on the #(1) directory
@@ -637,7 +637,7 @@ function xarcachemanager_create_cache_data()
         if (empty($query)) {
             return;
         } // throw back
-        $result =& $dbconn->Execute($query);
+        $result = & $dbconn->Execute($query);
         if (!$result) {
             return;
         }

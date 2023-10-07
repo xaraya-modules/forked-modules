@@ -459,7 +459,7 @@ function xarcachemanager_stats_filestats(&$totals, $logfile, $hitfield = null, $
             }
             $status = strtolower($fields[$hitfield]);
             $totals[$status]++;
-        // we're dealing with separate fields in a stats file
+            // we're dealing with separate fields in a stats file
         } else {
             if (!isset($fields[$hitfield]) || !isset($fields[$missfield])) {
                 continue;

@@ -69,9 +69,9 @@ function xarcachemanager_admin_modifyconfig()
     }
 
     $data['CookieName'] =  (xarConfigVars::get(null, 'Site.Session.CookieName') != '') ? xarConfigVars::get(null, 'Site.Session.CookieName') : 'XARAYASID';
-    $data['cookieupdatelink'] = xarController::URL('base', 'admin', 'modifyconfig', ['tab'=>'security']);
+    $data['cookieupdatelink'] = xarController::URL('base', 'admin', 'modifyconfig', ['tab' => 'security']);
     $data['defaultlocale'] = xarMLS::getSiteLocale();
-    $data['localeupdatelink'] = xarController::URL('base', 'admin', 'modifyconfig', ['tab'=>'locales']);
+    $data['localeupdatelink'] = xarController::URL('base', 'admin', 'modifyconfig', ['tab' => 'locales']);
 
     // get the caching config settings from the config file
     $data['settings'] = CacheManager::get_config(

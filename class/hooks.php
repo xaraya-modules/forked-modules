@@ -351,7 +351,7 @@ class CacheHooks extends xarObject
                  theuser,
                  expire
                  FROM $blocksettings WHERE blockinstance_id = $itemid ";
-        $result =& $dbconn->Execute($query);
+        $result = & $dbconn->Execute($query);
         if ($result && !$result->EOF) {
             [$noCache, $pageShared, $userShared, $blockCacheExpireTime] = $result->fields;
         } else {
@@ -493,11 +493,11 @@ class CacheHooks extends xarObject
                     $dbconn = xarDB::getConn();
                     $query = "SELECT nocache
                                 FROM $blocksettings WHERE blockinstance_id = $objectid ";
-                    $result =& $dbconn->Execute($query);
+                    $result = & $dbconn->Execute($query);
                     if (count($result) > 0) {
                         $query = "DELETE FROM
                                  $blocksettings WHERE blockinstance_id = $objectid ";
-                        $result =& $dbconn->Execute($query);
+                        $result = & $dbconn->Execute($query);
                     }
                     $query = "INSERT INTO $blocksettings (blockinstance_id,
                                                           nocache,
@@ -506,7 +506,7 @@ class CacheHooks extends xarObject
                                                           expire)
                                 VALUES (?,?,?,?,?)";
                     $bindvars = [$objectid, $nocache, $pageshared, $usershared, $cacheexpire];
-                    $result =& $dbconn->Execute($query, $bindvars);
+                    $result = & $dbconn->Execute($query, $bindvars);
                 }
 
                 // blocks could be anywhere, we're not smart enough not know exactly where yet
@@ -668,11 +668,11 @@ class CacheHooks extends xarObject
                 $dbconn = xarDB::getConn();
                 $query = "SELECT nocache
                             FROM $blocksettings WHERE blockinstance_id = $objectid ";
-                $result =& $dbconn->Execute($query);
+                $result = & $dbconn->Execute($query);
                 if (count($result) > 0) {
                     $query = "DELETE FROM
                              $blocksettings WHERE blockinstance_id = $objectid ";
-                    $result =& $dbconn->Execute($query);
+                    $result = & $dbconn->Execute($query);
                 }
 
                 // blocks could be anywhere, we're not smart enough not know exactly where yet

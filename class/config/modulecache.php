@@ -50,7 +50,7 @@ class ModuleCache extends CacheConfig
         }
 
         $data = [];
-        if (!xarCache::$outputCacheIsEnabled || !xarOutputCache::$moduleCacheIsEnabled) {
+        if (!xarCache::isOutputCacheEnabled() || !xarOutputCache::isModuleCacheEnabled()) {
             $data['modules'] = [];
             return $data;
         }
@@ -105,7 +105,7 @@ class ModuleCache extends CacheConfig
             // modules could be anywhere, we're not smart enough not know exactly where yet
             $key = '';
             // so just flush all pages
-            if (xarOutputCache::$pageCacheIsEnabled) {
+            if (xarOutputCache::isPageCacheEnabled()) {
                 xarPageCache::flushCached($key);
             }
             // and flush the modules

@@ -58,7 +58,7 @@ class CacheHooks extends xarObject
         $outputCacheDir = sys::varpath() . '/cache/output/';
 
         // make sure output caching is really enabled, and that we are caching pages
-        if (!xarCache::$outputCacheIsEnabled || !xarOutputCache::$pageCacheIsEnabled) {
+        if (!xarCache::isOutputCacheEnabled() || !xarOutputCache::isPageCacheEnabled()) {
             $logs[] = "$method no page caching";
             $logs[] = "$method stop";
             return implode("\n", $logs);
@@ -127,7 +127,7 @@ class CacheHooks extends xarObject
             $extrainfo = [];
         }
 
-        if (!xarCache::$outputCacheIsEnabled) {
+        if (!xarCache::isOutputCacheEnabled()) {
             // nothing more to do here
             return $extrainfo;
         }
@@ -167,17 +167,17 @@ class CacheHooks extends xarObject
             case 'blocks':
                 // blocks could be anywhere, we're not smart enough not know exactly where yet
                 // so just flush all pages
-                if (xarOutputCache::$pageCacheIsEnabled) {
+                if (xarOutputCache::isPageCacheEnabled()) {
                     xarPageCache::flushCached('');
                 }
                 break;
             case 'privileges': // fall-through all modules that should flush the entire cache
             case 'roles':
                 // if security changes, flush everything, just in case.
-                if (xarOutputCache::$pageCacheIsEnabled) {
+                if (xarOutputCache::isPageCacheEnabled()) {
                     xarPageCache::flushCached('');
                 }
-                if (xarOutputCache::$blockCacheIsEnabled) {
+                if (xarOutputCache::isBlockCacheEnabled()) {
                     xarBlockCache::flushCached('');
                 }
                 break;
@@ -185,12 +185,12 @@ class CacheHooks extends xarObject
                 if (isset($extrainfo['status']) && $extrainfo['status'] == 0) {
                     break;
                 }
-                if (xarOutputCache::$pageCacheIsEnabled) {
+                if (xarOutputCache::isPageCacheEnabled()) {
                     xarPageCache::flushCached('articles-');
                     // a status update might mean a new menulink and new base homepage
                     xarPageCache::flushCached('base');
                 }
-                if (xarOutputCache::$blockCacheIsEnabled) {
+                if (xarOutputCache::isBlockCacheEnabled()) {
                     // a status update might mean a new menulink and new base homepage
                     xarBlockCache::flushCached('base');
                 }
@@ -202,7 +202,7 @@ class CacheHooks extends xarObject
                                                                  'itemtype' => $itemtype, ]);
                 // CHECKME: how do we know if we need to e.g. flush dyn_example pages here ?
                 // flush dynamicdata and objecturl pages
-                if (xarOutputCache::$pageCacheIsEnabled) {
+                if (xarOutputCache::isPageCacheEnabled()) {
                     xarPageCache::flushCached('dynamicdata-');
                     if (!empty($objectinfo) && !empty($objectinfo['name'])) {
                         xarPageCache::flushCached('objecturl-' . $objectinfo['name'] . '-');
@@ -210,11 +210,11 @@ class CacheHooks extends xarObject
                 }
                 // CHECKME: how do we know if we need to e.g. flush dyn_example module here ?
                 // flush dynamicdata module
-                if (xarOutputCache::$moduleCacheIsEnabled) {
+                if (xarOutputCache::isModuleCacheEnabled()) {
                     xarModuleCache::flushCached('dynamicdata-');
                 }
                 // flush objects by name, e.g. dyn_example
-                if (xarOutputCache::$objectCacheIsEnabled) {
+                if (xarOutputCache::isObjectCacheEnabled()) {
                     if (!empty($objectinfo) && !empty($objectinfo['name'])) {
                         xarObjectCache::flushCached($objectinfo['name'] . '-');
                     }
@@ -225,7 +225,7 @@ class CacheHooks extends xarObject
             case 'html': // keep falling through
             case 'keywords': // keep falling through
                 // delete cachekey of each module autolinks is hooked to.
-                if (xarOutputCache::$pageCacheIsEnabled) {
+                if (xarOutputCache::isPageCacheEnabled()) {
                     $hooklist = xarMod::apiFunc('modules', 'admin', 'gethooklist');
                     $modhooks = reset($hooklist[$modname]);
 
@@ -240,11 +240,11 @@ class CacheHooks extends xarObject
                 // identify pages that include the updated item and delete the cached files
                 // nothing fancy yet, just flush it out
                 $cacheKey = "$modname-";
-                if (xarOutputCache::$pageCacheIsEnabled) {
+                if (xarOutputCache::isPageCacheEnabled()) {
                     xarPageCache::flushCached($cacheKey);
                 }
                 // a new item might mean a new menulink
-                if (xarOutputCache::$blockCacheIsEnabled) {
+                if (xarOutputCache::isBlockCacheEnabled()) {
                     xarBlockCache::flushCached('base-');
                 }
                 break;
@@ -280,7 +280,7 @@ class CacheHooks extends xarObject
         // only display modify hooks if block level output caching has been enabled
         // (don't check if output caching is enabled here so config options can be tweaked
         //  even when output caching has been temporarily disabled)
-        if (!xarOutputCache::$blockCacheIsEnabled) {
+        if (!xarOutputCache::isBlockCacheEnabled()) {
             return '';
         }
 
@@ -468,7 +468,7 @@ class CacheHooks extends xarObject
                 // first, if authorized, save the new settings
                 // (don't check if output caching is enabled here so config options can be tweaked
                 //  even when output caching has been temporarily disabled)
-                if (xarOutputCache::$blockCacheIsEnabled &&
+                if (xarOutputCache::isBlockCacheEnabled() &&
                     xarSecurity::check('AdminXarCache', 0)) {
                     xarVar::fetch('nocache', 'isset', $nocache, 0, xarVar::NOT_REQUIRED);
                     xarVar::fetch('pageshared', 'isset', $pageshared, 0, xarVar::NOT_REQUIRED);
@@ -511,23 +511,23 @@ class CacheHooks extends xarObject
 
                 // blocks could be anywhere, we're not smart enough not know exactly where yet
                 // so just flush all pages
-                if (xarCache::$outputCacheIsEnabled && xarOutputCache::$pageCacheIsEnabled) {
+                if (xarCache::isOutputCacheEnabled() && xarOutputCache::isPageCacheEnabled()) {
                     xarPageCache::flushCached('');
                 }
                 // and flush the block
                 // FIXME: we can't filter on the middle of the key, only on the start of it
                 $cacheKey = "-blockid" . $objectid;
-                if (xarCache::$outputCacheIsEnabled && xarOutputCache::$blockCacheIsEnabled) {
+                if (xarCache::isOutputCacheEnabled() && xarOutputCache::isBlockCacheEnabled()) {
                     xarBlockCache::flushCached('');
                 }
                 break;
             case 'articles':
-                if (xarCache::$outputCacheIsEnabled && xarOutputCache::$pageCacheIsEnabled) {
+                if (xarCache::isOutputCacheEnabled() && xarOutputCache::isPageCacheEnabled()) {
                     xarPageCache::flushCached('articles-');
                     // a status update might mean a new menulink and new base homepage
                     xarPageCache::flushCached('base');
                 }
-                if (xarCache::$outputCacheIsEnabled && xarOutputCache::$blockCacheIsEnabled) {
+                if (xarCache::isOutputCacheEnabled() && xarOutputCache::isBlockCacheEnabled()) {
                     // a status update might mean a new menulink and new base homepage
                     xarBlockCache::flushCached('base');
                 }
@@ -535,10 +535,10 @@ class CacheHooks extends xarObject
             case 'privileges': // fall-through all modules that should flush the entire cache
             case 'roles':
                 // if security changes, flush everything, just in case.
-                if (xarCache::$outputCacheIsEnabled && xarOutputCache::$pageCacheIsEnabled) {
+                if (xarCache::isOutputCacheEnabled() && xarOutputCache::isPageCacheEnabled()) {
                     xarPageCache::flushCached('');
                 }
-                if (xarCache::$outputCacheIsEnabled && xarOutputCache::$blockCacheIsEnabled) {
+                if (xarCache::isOutputCacheEnabled() && xarOutputCache::isBlockCacheEnabled()) {
                     xarBlockCache::flushCached('');
                 }
                 break;
@@ -549,7 +549,7 @@ class CacheHooks extends xarObject
                                                                  'itemtype' => $itemtype, ]);
                 // CHECKME: how do we know if we need to e.g. flush dyn_example pages here ?
                 // flush dynamicdata and objecturl pages
-                if (xarCache::$outputCacheIsEnabled && xarOutputCache::$pageCacheIsEnabled) {
+                if (xarCache::isOutputCacheEnabled() && xarOutputCache::isPageCacheEnabled()) {
                     xarPageCache::flushCached('dynamicdata-');
                     if (!empty($objectinfo) && !empty($objectinfo['name'])) {
                         xarPageCache::flushCached('objecturl-' . $objectinfo['name'] . '-');
@@ -557,11 +557,11 @@ class CacheHooks extends xarObject
                 }
                 // CHECKME: how do we know if we need to e.g. flush dyn_example module here ?
                 // flush dynamicdata module
-                if (xarCache::$outputCacheIsEnabled && xarOutputCache::$moduleCacheIsEnabled) {
+                if (xarCache::isOutputCacheEnabled() && xarOutputCache::isModuleCacheEnabled()) {
                     xarModuleCache::flushCached('dynamicdata-');
                 }
                 // flush objects by name, e.g. dyn_example
-                if (xarCache::$outputCacheIsEnabled && xarOutputCache::$objectCacheIsEnabled) {
+                if (xarCache::isOutputCacheEnabled() && xarOutputCache::isObjectCacheEnabled()) {
                     if (!empty($objectinfo) && !empty($objectinfo['name'])) {
                         xarObjectCache::flushCached($objectinfo['name'] . '-');
                     }
@@ -572,7 +572,7 @@ class CacheHooks extends xarObject
             case 'keywords': // keep falling through
             case 'html': // keep falling through
                 // delete cachekey of each module autolinks is hooked to.
-                if (xarCache::$outputCacheIsEnabled && xarOutputCache::$pageCacheIsEnabled) {
+                if (xarCache::isOutputCacheEnabled() && xarOutputCache::isPageCacheEnabled()) {
                     $hooklist = xarMod::apiFunc('modules', 'admin', 'gethooklist');
                     $modhooks = reset($hooklist[$modname]);
 
@@ -587,13 +587,13 @@ class CacheHooks extends xarObject
                 // identify pages that include the updated item and delete the cached files
                 // nothing fancy yet, just flush it out
                 $cacheKey = "$modname-";
-                if (xarCache::$outputCacheIsEnabled && xarOutputCache::$pageCacheIsEnabled) {
+                if (xarCache::isOutputCacheEnabled() && xarOutputCache::isPageCacheEnabled()) {
                     xarPageCache::flushCached($cacheKey);
                 }
                 break;
         }
 
-        if (xarCache::$outputCacheIsEnabled && xarModVars::get('xarcachemanager', 'AutoRegenSessionless')) {
+        if (xarCache::isOutputCacheEnabled() && xarModVars::get('xarcachemanager', 'AutoRegenSessionless')) {
             self::regenstatic();
         }
 
@@ -677,23 +677,23 @@ class CacheHooks extends xarObject
 
                 // blocks could be anywhere, we're not smart enough not know exactly where yet
                 // so just flush all pages
-                if (xarCache::$outputCacheIsEnabled && xarOutputCache::$pageCacheIsEnabled) {
+                if (xarCache::isOutputCacheEnabled() && xarOutputCache::isPageCacheEnabled()) {
                     xarPageCache::flushCached('');
                 }
                 // and flush the block
                 // FIXME: we can't filter on the middle of the key, only on the start of it
                 $cacheKey = "-blockid" . $objectid;
-                if (xarCache::$outputCacheIsEnabled && xarOutputCache::$blockCacheIsEnabled) {
+                if (xarCache::isOutputCacheEnabled() && xarOutputCache::isBlockCacheEnabled()) {
                     xarBlockCache::flushCached('');
                 }
                 break;
             case 'articles':
-                if (xarCache::$outputCacheIsEnabled && xarOutputCache::$pageCacheIsEnabled) {
+                if (xarCache::isOutputCacheEnabled() && xarOutputCache::isPageCacheEnabled()) {
                     xarPageCache::flushCached('articles-');
                     // a status update might mean a new menulink and new base homepage
                     xarPageCache::flushCached('base');
                 }
-                if (xarCache::$outputCacheIsEnabled && xarOutputCache::$blockCacheIsEnabled) {
+                if (xarCache::isOutputCacheEnabled() && xarOutputCache::isBlockCacheEnabled()) {
                     // a status update might mean a new menulink and new base homepage
                     xarBlockCache::flushCached('base');
                 }
@@ -701,10 +701,10 @@ class CacheHooks extends xarObject
             case 'privileges': // fall-through all modules that should flush the entire cache
             case 'roles':
                 // if security changes, flush everything, just in case.
-                if (xarCache::$outputCacheIsEnabled && xarOutputCache::$pageCacheIsEnabled) {
+                if (xarCache::isOutputCacheEnabled() && xarOutputCache::isPageCacheEnabled()) {
                     xarPageCache::flushCached('');
                 }
-                if (xarCache::$outputCacheIsEnabled && xarOutputCache::$blockCacheIsEnabled) {
+                if (xarCache::isOutputCacheEnabled() && xarOutputCache::isBlockCacheEnabled()) {
                     xarBlockCache::flushCached('');
                 }
                 break;
@@ -715,7 +715,7 @@ class CacheHooks extends xarObject
                                                                  'itemtype' => $itemtype, ]);
                 // CHECKME: how do we know if we need to e.g. flush dyn_example pages here ?
                 // flush dynamicdata and objecturl pages
-                if (xarCache::$outputCacheIsEnabled && xarOutputCache::$pageCacheIsEnabled) {
+                if (xarCache::isOutputCacheEnabled() && xarOutputCache::isPageCacheEnabled()) {
                     xarPageCache::flushCached('dynamicdata-');
                     if (!empty($objectinfo) && !empty($objectinfo['name'])) {
                         xarPageCache::flushCached('objecturl-' . $objectinfo['name'] . '-');
@@ -723,11 +723,11 @@ class CacheHooks extends xarObject
                 }
                 // CHECKME: how do we know if we need to e.g. flush dyn_example module here ?
                 // flush dynamicdata module
-                if (xarCache::$outputCacheIsEnabled && xarOutputCache::$moduleCacheIsEnabled) {
+                if (xarCache::isOutputCacheEnabled() && xarOutputCache::isModuleCacheEnabled()) {
                     xarModuleCache::flushCached('dynamicdata-');
                 }
                 // flush objects by name, e.g. dyn_example
-                if (xarCache::$outputCacheIsEnabled && xarOutputCache::$objectCacheIsEnabled) {
+                if (xarCache::isOutputCacheEnabled() && xarOutputCache::isObjectCacheEnabled()) {
                     if (!empty($objectinfo) && !empty($objectinfo['name'])) {
                         xarObjectCache::flushCached($objectinfo['name'] . '-');
                     }
@@ -738,7 +738,7 @@ class CacheHooks extends xarObject
             case 'keywords': // keep falling through
             case 'html': // keep falling through
                 // delete cachekey of each module autolinks is hooked to.
-                if (xarCache::$outputCacheIsEnabled && xarOutputCache::$pageCacheIsEnabled) {
+                if (xarCache::isOutputCacheEnabled() && xarOutputCache::isPageCacheEnabled()) {
                     $hooklist = xarMod::apiFunc('modules', 'admin', 'gethooklist');
                     $modhooks = reset($hooklist[$modname]);
 
@@ -754,17 +754,17 @@ class CacheHooks extends xarObject
                 // identify pages that include the updated item and delete the cached files
                 // nothing fancy yet, just flush it out
                 $cacheKey = "$modname-";
-                if (xarCache::$outputCacheIsEnabled && xarOutputCache::$pageCacheIsEnabled) {
+                if (xarCache::isOutputCacheEnabled() && xarOutputCache::isPageCacheEnabled()) {
                     xarPageCache::flushCached($cacheKey);
                 }
                 // a deleted item might mean a menulink goes away
-                if (xarCache::$outputCacheIsEnabled && xarOutputCache::$blockCacheIsEnabled) {
+                if (xarCache::isOutputCacheEnabled() && xarOutputCache::isBlockCacheEnabled()) {
                     xarBlockCache::flushCached('base-');
                 }
                 break;
         }
 
-        if (xarCache::$outputCacheIsEnabled && xarModVars::get('xarcachemanager', 'AutoRegenSessionless')) {
+        if (xarCache::isOutputCacheEnabled() && xarModVars::get('xarcachemanager', 'AutoRegenSessionless')) {
             self::regenstatic();
         }
 
@@ -790,7 +790,7 @@ class CacheHooks extends xarObject
             $extrainfo = [];
         }
 
-        if (!xarCache::$outputCacheIsEnabled) {
+        if (!xarCache::isOutputCacheEnabled()) {
             // nothing more to do here
             return $extrainfo;
         }
@@ -829,10 +829,10 @@ class CacheHooks extends xarObject
         switch ($modname) {
             case 'base': // who knows what global impact a config change to base might make
                 // flush everything.
-                if (xarOutputCache::$pageCacheIsEnabled) {
+                if (xarOutputCache::isPageCacheEnabled()) {
                     xarPageCache::flushCached('');
                 }
-                if (xarOutputCache::$blockCacheIsEnabled) {
+                if (xarOutputCache::isBlockCacheEnabled()) {
                     xarBlockCache::flushCached('');
                 }
                 break;
@@ -840,7 +840,7 @@ class CacheHooks extends xarObject
             case 'comments': // keep falling through
             case 'keywords': // keep falling through
                 // delete cachekey of each module autolinks is hooked to.
-                if (xarOutputCache::$pageCacheIsEnabled) {
+                if (xarOutputCache::isPageCacheEnabled()) {
                     $hooklist = xarMod::apiFunc('modules', 'admin', 'gethooklist');
                     $modhooks = reset($hooklist[$modname]);
 
@@ -857,11 +857,11 @@ class CacheHooks extends xarObject
                 // identify pages that include the updated item and delete the cached files
                 // nothing fancy yet, just flush it out
                 $cacheKey = "$modname-";
-                if (xarOutputCache::$pageCacheIsEnabled) {
+                if (xarOutputCache::isPageCacheEnabled()) {
                     xarPageCache::flushCached($cacheKey);
                 }
                 // since we're modifying the config, we might get a new admin menulink
-                if (xarOutputCache::$blockCacheIsEnabled) {
+                if (xarOutputCache::isBlockCacheEnabled()) {
                     xarBlockCache::flushCached('base-block');
                 }
                 break;

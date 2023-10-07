@@ -51,7 +51,7 @@ class BlockCache extends CacheConfig
         }
 
         $data = [];
-        if (!xarCache::$outputCacheIsEnabled || !xarOutputCache::$blockCacheIsEnabled) {
+        if (!xarCache::isOutputCacheEnabled() || !xarOutputCache::isBlockCacheEnabled()) {
             $data['blocks'] = [];
             return $data;
         }
@@ -126,7 +126,7 @@ class BlockCache extends CacheConfig
             // blocks could be anywhere, we're not smart enough not know exactly where yet
             $key = '';
             // so just flush all pages
-            if (xarOutputCache::$pageCacheIsEnabled) {
+            if (xarOutputCache::isPageCacheEnabled()) {
                 xarPageCache::flushCached($key);
             }
             // and flush the blocks

@@ -54,7 +54,7 @@ class PageCache extends CacheConfig
         }
 
         $data = [];
-        if (!xarCache::$outputCacheIsEnabled || !xarOutputCache::$pageCacheIsEnabled) {
+        if (!xarCache::isOutputCacheEnabled() || !xarOutputCache::isPageCacheEnabled()) {
             $data['pages'] = [];
             return $data;
         }

@@ -71,22 +71,22 @@ function xarcachemanager_admin_stats($args)
     $data['ObjectCachingEnabled'] = 0;
     $data['VariableCachingEnabled'] = 0;
     $data['AutoCachingEnabled'] = 0;
-    if (xarOutputCache::$pageCacheIsEnabled) {
+    if (xarOutputCache::isPageCacheEnabled()) {
         $data['PageCachingEnabled'] = 1;
         if (file_exists($outputCacheDir . '/autocache.log')) {
             $data['AutoCachingEnabled'] = 1;
         }
     }
-    if (xarOutputCache::$blockCacheIsEnabled) {
+    if (xarOutputCache::isBlockCacheEnabled()) {
         $data['BlockCachingEnabled'] = 1;
     }
-    if (xarOutputCache::$moduleCacheIsEnabled) {
+    if (xarOutputCache::isModuleCacheEnabled()) {
         $data['ModuleCachingEnabled'] = 1;
     }
-    if (xarOutputCache::$objectCacheIsEnabled) {
+    if (xarOutputCache::isObjectCacheEnabled()) {
         $data['ObjectCachingEnabled'] = 1;
     }
-    if (xarCache::$variableCacheIsEnabled) {
+    if (xarCache::isVariableCacheEnabled()) {
         $data['VariableCachingEnabled'] = 1;
     }
     // TODO: bring in line with other cache systems ?

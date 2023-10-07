@@ -50,7 +50,7 @@ class ObjectCache extends CacheConfig
         }
 
         $data = [];
-        if (!xarCache::$outputCacheIsEnabled || !xarOutputCache::$objectCacheIsEnabled) {
+        if (!xarCache::isOutputCacheEnabled() || !xarOutputCache::isObjectCacheEnabled()) {
             $data['objects'] = [];
             return $data;
         }
@@ -99,7 +99,7 @@ class ObjectCache extends CacheConfig
             // objects could be anywhere, we're not smart enough not know exactly where yet
             $key = '';
             // so just flush all pages
-            if (xarOutputCache::$pageCacheIsEnabled) {
+            if (xarOutputCache::isPageCacheEnabled()) {
                 xarPageCache::flushCached($key);
             }
             // and flush the objects

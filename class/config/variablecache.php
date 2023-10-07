@@ -49,7 +49,7 @@ class VariableCache extends CacheConfig
         }
 
         $data = [];
-        if (!xarCache::$variableCacheIsEnabled) {
+        if (!xarCache::isVariableCacheEnabled()) {
             $data['variables'] = [];
             return $data;
         }

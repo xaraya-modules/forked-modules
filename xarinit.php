@@ -209,12 +209,13 @@ function changelog_deactivate()
 
 function changelog_create_new_hooks()
 {
-    xarHooks::registerObserver('ItemCreate', 'changelog');
-    xarHooks::registerObserver('ItemUpdate', 'changelog');
-    xarHooks::registerObserver('ItemDelete', 'changelog');
-    xarHooks::registerObserver('ModuleRemove', 'changelog');
-    xarHooks::registerObserver('ItemDisplay', 'changelog');
-    xarHooks::registerObserver('ItemModify', 'changelog');
+    $namespace = 'Xaraya\Modules\ChangeLog\HookObservers';
+    xarHooks::registerObserver('ItemCreate', 'changelog', $namespace . '\ItemCreateObserver');
+    xarHooks::registerObserver('ItemUpdate', 'changelog', $namespace . '\ItemUpdateObserver');
+    xarHooks::registerObserver('ItemDelete', 'changelog', $namespace . '\ItemDeleteObserver');
+    xarHooks::registerObserver('ModuleRemove', 'changelog', $namespace . '\ModuleRemoveObserver');
+    xarHooks::registerObserver('ItemDisplay', 'changelog', $namespace . '\ItemDisplayObserver');
+    xarHooks::registerObserver('ItemModify', 'changelog', $namespace . '\ItemModifyObserver');
     return true;
 }
 

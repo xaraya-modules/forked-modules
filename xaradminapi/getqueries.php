@@ -15,8 +15,7 @@ use Xaraya\Modules\CacheManager\Config\QueryCache;
 
 /**
  * get configuration of query caching for expensive queries
-
- * @todo currently unsupported + refers to legacy modules
+ *
  * @uses QueryCache::getConfig()
  * @return array of query caching configurations
  */

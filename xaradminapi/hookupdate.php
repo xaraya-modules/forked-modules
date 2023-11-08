@@ -11,7 +11,7 @@
  * @author Marc Lutolf <mfl@netspan.ch>
  */
 
-sys::import('modules.dynamicdata.class.objects.master');
+sys::import('modules.dynamicdata.class.objects.factory');
 
 function calendar_adminapi_hookupdate($data)
 {
@@ -67,7 +67,7 @@ function calendar_adminapi_hookupdate($data)
     $data['extrainfo']['state'] ??= 3;
     $data['extrainfo']['timestamp'] ??= time();
 
-    $object = DataObjectMaster::getObject(['name' => 'calendar_event']);
+    $object = DataObjectFactory::getObject(['name' => 'calendar_event']);
     $item = $object->updateItem($data['extrainfo']);
 
     return $data['extrainfo'];

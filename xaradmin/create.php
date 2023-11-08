@@ -11,7 +11,7 @@
  * @author Marc Lutolf <mfl@netspan.ch>
  */
 
-sys::import('modules.dynamicdata.class.objects.master');
+sys::import('modules.dynamicdata.class.objects.factory');
 function calendar_admin_create($args)
 {
     extract($args);
@@ -45,7 +45,7 @@ function calendar_admin_create($args)
         return;
     }
 
-    $myobject = DataObjectMaster::getObject(['objectid' => $objectid,
+    $myobject = DataObjectFactory::getObject(['objectid' => $objectid,
                                          'itemid'   => $itemid, ]);
     $isvalid = $myobject->checkInput();
 

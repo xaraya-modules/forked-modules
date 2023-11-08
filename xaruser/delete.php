@@ -28,7 +28,7 @@
  * @param 'confirm' confirm that this item can be deleted
  */
 
-sys::import('modules.dynamicdata.class.objects.master');
+sys::import('modules.dynamicdata.class.objects.factory');
 
 function calendar_user_delete($args)
 {
@@ -65,7 +65,7 @@ function calendar_user_delete($args)
         return;
     }
 
-    $myobject = DataObjectMaster::getObject(['objectid' => $objectid,
+    $myobject = DataObjectFactory::getObject(['objectid' => $objectid,
                                          'name'       => $name,
                                          'join'       => $join,
                                          'table'      => $table,

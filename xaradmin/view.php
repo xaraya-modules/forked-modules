@@ -31,7 +31,7 @@ function calendar_admin_view($args)
     xarSession::setVar('ddcontext.' . $modulename, ['return_url' => xarServer::getCurrentURL()]);
 
     // Get the available dropdown options
-    $object = DataObjectMaster::getObjectList(['objectid' => 1]);
+    $object = DataObjectFactory::getObjectList(['objectid' => 1]);
     $data['objectname'] = xarModVars::get($modulename, 'defaultmastertable');
     $items = $object->getItems();
     $options = [];

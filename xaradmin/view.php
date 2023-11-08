@@ -47,7 +47,7 @@ function comments_admin_view()
     ]);
     $data['sort'] = $sort;
 
-    $object = DataObjectMaster::getObject(['name' => 'comments_comments']);
+    $object = DataObjectFactory::getObject(['name' => 'comments_comments']);
     $config = $object->configuration;
     $adminfields = reset($config['adminfields']);
     $numitems = xarModVars::get('comments', 'items_per_page');
@@ -55,7 +55,7 @@ function comments_admin_view()
     $filters = [];
 
     // Total number of comments for use in the pager
-    $total = DataObjectMaster::getObjectList([
+    $total = DataObjectFactory::getObjectList([
                             'name' => 'comments_comments',
                             'numitems' => null,
                             'where' => 'status ne ' . _COM_STATUS_ROOT_NODE,
@@ -88,7 +88,7 @@ function comments_admin_view()
 
     $filters['where'] .= 'status ne ' . _COM_STATUS_ROOT_NODE;
 
-    $list = DataObjectMaster::getObjectList([
+    $list = DataObjectFactory::getObjectList([
                             'name' => 'comments_comments',
                             'sort' => $sort,
                             'startnum' => $startnum,

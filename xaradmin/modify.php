@@ -48,10 +48,10 @@ function comments_admin_modify()
     $data['id'] = $id;
 
     // Load the DD master object class. This line will likely disappear in future versions
-    sys::import('modules.dynamicdata.class.objects.master');
+    sys::import('modules.dynamicdata.class.objects.factory');
 
     // Get the object name
-    $commentsobject = DataObjectMaster::getObject(['name' => 'comments']);
+    $commentsobject = DataObjectFactory::getObject(['name' => 'comments']);
     $check = $commentsobject->getItem(['itemid' => $id]);
     if (empty($check)) {
         $msg = 'There is no comment with an itemid of ' . $id;
@@ -65,7 +65,7 @@ function comments_admin_modify()
     $data['pathval'] = '';
 
     // Get the object we'll be working with
-    $object = DataObjectMaster::getObject(['name' => 'comments_comments']);
+    $object = DataObjectFactory::getObject(['name' => 'comments_comments']);
     $data['object'] = $object; // save for later
 
     $data['label'] = $object->label;

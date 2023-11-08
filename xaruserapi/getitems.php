@@ -107,8 +107,8 @@ function comments_userapi_getitems($args)
         $filters = [];
     }
 
-    sys::import('modules.dynamicdata.class.objects.master');
-//    $list = DataObjectMaster::getObjectList(array(
+    sys::import('modules.dynamicdata.class.objects.factory');
+//    $list = DataObjectFactory::getObjectList(array(
 //                            'name' => 'comments_comments'
 //        ));
 

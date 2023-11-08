@@ -193,8 +193,8 @@ function comments_userapi_add($args)
     }*/
 
 
-    sys::import('modules.dynamicdata.class.objects.master');
-    $object = DataObjectMaster::getObject([
+    sys::import('modules.dynamicdata.class.objects.factory');
+    $object = DataObjectFactory::getObject([
                             'name' => 'comments_comments',
         ]);
 

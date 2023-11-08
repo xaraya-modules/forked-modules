@@ -41,8 +41,8 @@ function comments_user_delete()
         return xarResponse::NotFound();
     }
 
-    sys::import('modules.dynamicdata.class.objects.master');
-    $data['object'] = DataObjectMaster::getObject(['name' => 'comments_comments']);
+    sys::import('modules.dynamicdata.class.objects.factory');
+    $data['object'] = DataObjectFactory::getObject(['name' => 'comments_comments']);
     $data['object']->getItem(['itemid' => $data['id']]);
     $values = $data['object']->getFieldValues();
     foreach ($values as $key => $val) {

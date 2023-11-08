@@ -41,8 +41,8 @@ function comments_userapi_get_one($args)
     // initialize the commentlist array
     $commentlist = [];
 
-    sys::import('modules.dynamicdata.class.objects.master');
-    $object = DataObjectMaster::getObject(['name' => 'comments_comments']);
+    sys::import('modules.dynamicdata.class.objects.factory');
+    $object = DataObjectFactory::getObject(['name' => 'comments_comments']);
     $object->getItem(['itemid' => $id]);
     $values = $object->getFieldValues();
     $values['position_atomic'] = $object->properties['position']->atomic_value;

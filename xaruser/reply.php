@@ -52,7 +52,7 @@ function comments_user_reply()
             # --------------------------------------------------------
             # Get the values from the form
 #
-            $data['reply'] = DataObjectMaster::getObject(['name' => 'comments_comments']);
+            $data['reply'] = DataObjectFactory::getObject(['name' => 'comments_comments']);
             $valid = $data['reply']->checkInput();
 
             // call transform input hooks
@@ -106,8 +106,8 @@ function comments_user_reply()
             # --------------------------------------------------------
             # Create the comment object
 #
-            sys::import('modules.dynamicdata.class.objects.master');
-            $data['object'] = DataObjectMaster::getObject(['name' => 'comments_comments']);
+            sys::import('modules.dynamicdata.class.objects.factory');
+            $data['object'] = DataObjectFactory::getObject(['name' => 'comments_comments']);
             $data['object']->getItem(['itemid' => $data['comment_id']]);
 
             // replace the deprecated eregi stuff below
@@ -151,7 +151,7 @@ function comments_user_reply()
             $data['package']               = $package;
 
             // Create an object item for the reply
-            $data['reply'] = DataObjectMaster::getObject(['name' => 'comments_comments']);
+            $data['reply'] = DataObjectFactory::getObject(['name' => 'comments_comments']);
             $data['reply']->properties['title']->value = $new_title;
             $data['reply']->properties['position']->reference_id = $data['comment_id'];
             $data['reply']->properties['position']->position = 3;

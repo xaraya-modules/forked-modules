@@ -22,7 +22,7 @@ function comments_userapi_moditemcounts($args)
 
     extract($args);
 
-    sys::import('modules.dynamicdata.class.objects.master');
+    sys::import('modules.dynamicdata.class.objects.factory');
 
     foreach ($items as $item) {
         if (!isset($itemid) || $itemid != $item['itemid']) {
@@ -36,7 +36,7 @@ function comments_userapi_moditemcounts($args)
             } else {
                 $filters['where'] .= ' and status ne ' . _COM_STATUS_ROOT_NODE;
             }
-            $list = DataObjectMaster::getObjectList([
+            $list = DataObjectFactory::getObjectList([
                                 'name' => 'comments_comments',
                             ]);
             $items = $list->getItems($filters);

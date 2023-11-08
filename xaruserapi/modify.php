@@ -107,8 +107,8 @@ function comments_userapi_modify($args)
         $text .= "\n"; //let's keep the begin and end tags together around the wrapped content
     }
 
-    sys::import('modules.dynamicdata.class.objects.master');
-    $object = DataObjectMaster::getObject([
+    sys::import('modules.dynamicdata.class.objects.factory');
+    $object = DataObjectFactory::getObject([
                             'name' => 'comments_comments',
         ]);
 

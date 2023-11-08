@@ -79,8 +79,8 @@ function comments_user_display($args)
     # --------------------------------------------------------
     # Get the current comment
 #
-    sys::import('modules.dynamicdata.class.objects.master');
-    $data['object'] = DataObjectMaster::getObject(['name' => 'comments_comments']);
+    sys::import('modules.dynamicdata.class.objects.factory');
+    $data['object'] = DataObjectFactory::getObject(['name' => 'comments_comments']);
     if (!empty($data['selected_id'])) {
         $data['object']->getItem(['itemid' => $data['selected_id']]);
     }
@@ -102,7 +102,7 @@ function comments_user_display($args)
     # --------------------------------------------------------
     # Create an empty object for display and add any attributes passed
 #
-    $data['emptyobject'] = DataObjectMaster::getObject(['name' => 'comments_comments']);
+    $data['emptyobject'] = DataObjectFactory::getObject(['name' => 'comments_comments']);
     if (isset($args['tplmodule'])) {
         $data['object']->tplmodule = $args['tplmodule'];
     }

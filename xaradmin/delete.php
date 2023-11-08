@@ -43,7 +43,7 @@ function comments_admin_delete()
         return xarResponse::NotFound();
     }
 
-    sys::import('modules.dynamicdata.class.objects.master');
+    sys::import('modules.dynamicdata.class.objects.factory');
 
     switch (strtolower($data['dtype'])) {
         case 'item': // delete just one comment
@@ -51,7 +51,7 @@ function comments_admin_delete()
                 return;
             }
 
-            $object = DataObjectMaster::getObject(['name' => 'comments_comments']);
+            $object = DataObjectFactory::getObject(['name' => 'comments_comments']);
             $object->getItem(['itemid' => $itemid]);
             $values = $object->getFieldValues();
             foreach ($values as $key => $val) {
@@ -110,12 +110,12 @@ function comments_admin_delete()
     }
 
     if ($data['dtype'] != 'item') { // multiple items
-        $list = DataObjectMaster::getObjectList([
+        $list = DataObjectFactory::getObjectList([
                             'name' => 'comments',
             ]);
         $data['items'] = $list->getItems($filters);
 
-        $countlist = DataObjectMaster::getObjectList([
+        $countlist = DataObjectFactory::getObjectList([
                             'name' => 'comments',
             ]);
         if ($data['dtype'] == 'all') {
@@ -135,7 +135,7 @@ function comments_admin_delete()
 
             if (!empty($data['items'])) {
                 foreach ($data['items'] as $val) {
-                    $object = DataObjectMaster::getObject([
+                    $object = DataObjectFactory::getObject([
                                     'name' => 'comments_comments',
                     ]);
                     if (!is_object($object)) {

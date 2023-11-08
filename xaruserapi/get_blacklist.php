@@ -23,8 +23,8 @@ function comments_userapi_get_blacklist($args)
     }
     $items = [];
 
-    sys::import('modules.dynamicdata.class.objects.master');
-    $list = DataObjectMaster::getObjectList([
+    sys::import('modules.dynamicdata.class.objects.factory');
+    $list = DataObjectFactory::getObjectList([
                             'name' => 'comments_blacklist',
                             'numitems' => $numitems,
                             'startnum' => $startnum,

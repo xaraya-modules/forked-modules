@@ -11,11 +11,12 @@
  * @author Marc Lutolf <mfl@netspan.ch>
  */
 
+sys::import('modules.dynamicdata.class.objects.factory');
+
 /**
  * Display an item of the event object
  *
  */
-
 function calendar_user_display()
 {
     if (!xarSecurity::check('ReadCalendar')) {
@@ -28,7 +29,7 @@ function calendar_user_display()
     if (!xarVar::fetch('page', 'str:1', $data['page'], 'week', xarVar::NOT_REQUIRED)) {
         return;
     }
-    $data['object'] = DataobjectMaster::getObject(['name' => 'calendar_event']);
+    $data['object'] = DataObjectFactory::getObject(['name' => 'calendar_event']);
     $data['object']->getItem(['itemid' => $data['itemid']]);
     $data['tplmodule'] = 'calendar';
     $data['authid'] = xarSec::genAuthKey();

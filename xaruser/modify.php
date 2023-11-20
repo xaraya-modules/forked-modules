@@ -11,6 +11,8 @@
  * @author Marc Lutolf <mfl@netspan.ch>
  */
 
+sys::import('modules.dynamicdata.class.objects.factory');
+
 /**
  * Modify an item of the event object
  *
@@ -29,7 +31,7 @@ function calendar_user_modify()
     }
     xarSession::setVar('ddcontext.calendar', ['page' => $data['page'],
                                                     ]);
-    $data['object'] = DataobjectMaster::getObject(['name' => 'calendar_event']);
+    $data['object'] = DataObjectFactory::getObject(['name' => 'calendar_event']);
     $data['object']->getItem(['itemid' => $data['itemid']]);
     $data['tplmodule'] = 'calendar';
     $data['authid'] = xarSec::genAuthKey();

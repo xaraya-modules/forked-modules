@@ -11,6 +11,8 @@
  * @author Marc Lutolf <mfl@netspan.ch>
  */
 
+sys::import('modules.dynamicdata.class.objects.factory');
+
 /**
  * Create a new item of the event object
  *
@@ -26,7 +28,7 @@ function calendar_user_new()
     }
     xarSession::setVar('ddcontext.calendar', ['page' => $data['page'],
                                                     ]);
-    $data['object'] = DataobjectMaster::getObject(['name' => 'calendar_event']);
+    $data['object'] = DataObjectFactory::getObject(['name' => 'calendar_event']);
     $data['tplmodule'] = 'calendar';
     $data['authid'] = xarSec::genAuthKey();
     return $data;
